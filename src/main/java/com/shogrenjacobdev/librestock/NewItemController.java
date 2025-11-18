@@ -8,19 +8,18 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-public class AdminEditItemController {
+public class NewItemController {
     Stage stage;
-    @FXML private Button adminedititemreturn_button;
-    @FXML private Button adminedititemsubmit_button;
-    @FXML private Button adminedititemsearch_button; // saved for later even if not used currently
+    @FXML private Button newitemreturn_button;
+    @FXML private Button newitemsubmit_button;
 
     @FXML
-    private void adminededititemReturnButtonClick() throws IOException{
-        System.out.println("Returning to admin dash scene");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("admindash-view.fxml"));
+    private void newitemReturnButtonClick() throws IOException{
+        System.out.println("Returning to user dash scene");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("userdash-view.fxml"));
         Parent root = loader.load();
 
-        Stage stage = (Stage)adminedititemreturn_button.getScene().getWindow();
+        Stage stage = (Stage)newitemreturn_button.getScene().getWindow();
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
@@ -28,13 +27,13 @@ public class AdminEditItemController {
     }
 
     @FXML
-    private void adminedititemSubmitButtonClick() throws IOException{
+    private void newitemSubmitButtonClick() throws IOException{
         System.out.println("submitting data fr fr");
         /* put craaaaazy submit logic here later (some sort of update method for items in the db) */
     }
 
         @FXML
-    private void adminedititemSearchButtonClick() throws IOException{
+    private void newitemSearchButtonClick() throws IOException{
         System.out.println("searching data fr fr");
         /* put craaaaazy search logic here later (some sort of search method for items in the db) */
     }

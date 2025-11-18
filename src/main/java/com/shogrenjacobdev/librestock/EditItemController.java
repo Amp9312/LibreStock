@@ -10,8 +10,8 @@ import java.io.IOException;
 
 public class EditItemController {
     Stage stage;
-    @FXML private Button editcollectionreturn_button;
-    @FXML private Button editcollectionsubmit_button;
+    @FXML private Button edititemreturn_button;
+    @FXML private Button edititemsubmit_button;
     @FXML private Button edititemsearch_button; // saved for later even if not used currently
 
     @FXML
@@ -20,7 +20,7 @@ public class EditItemController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("userdash-view.fxml"));
         Parent root = loader.load();
 
-        Stage stage = (Stage)editcollectionreturn_button.getScene().getWindow();
+        Stage stage = (Stage)edititemreturn_button.getScene().getWindow();
         Scene scene = new Scene(root);
 
         stage.setScene(scene);

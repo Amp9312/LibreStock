@@ -20,10 +20,10 @@ public class HelloController {
     private void onLoginButtonClick() throws IOException{
         System.out.println("User Logged In...");
         //Uncomment if you want login to go to standard user view
-        //FXMLLoader loader = new FXMLLoader(getClass().getResource("userdash-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("admindash-view.fxml"));
 
         //If checking standard user view, make sure to comment the next line out so there isn't a conflict
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("admindash-view.fxml"));
+        //FXMLLoader loader = new FXMLLoader(getClass().getResource("admindash-view.fxml"));
         Parent root = loader.load();
 
         Stage stage = (Stage)login_button.getScene().getWindow();

@@ -10,10 +10,9 @@ import java.io.IOException;
 
 public class UserDashController {
     Stage stage;
-    @FXML
-    private Button userdashlogout_button;
-    private Button userdashedititem_button;
-    private Button userdashnewitem_button;
+    @FXML private Button userdashlogout_button;
+    @FXML private Button userdashedititem_button;
+    @FXML private Button userdashnewitem_button;
 
     @FXML
     private void newItemButtonClick() throws IOException{
