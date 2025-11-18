@@ -112,4 +112,81 @@ public class DbAccess {
 
         return null;
     }
+//
+//    public void deleteRowById(Integer id, String table) {
+//        if (table.equals("items")) {
+//            String sql = "DELETE FROM " + table + " WHERE itemId = " + id.toString();
+//
+//            try {
+//                runQuery(sql);
+//            }
+//            catch (SQLException e) {
+//                System.out.println("SQLException in DBAccess.deleteRowById, items table case:" + e.getMessage());
+//            }
+//        }
+//        else if (table.equals("collections")) {
+//            String sql = "DELETE FROM " + table + " WHERE id = " + id.toString();
+//
+//            try {
+//                runQuery(sql);
+//            }
+//            catch (SQLException e) {
+//                System.out.println("SQLException in DBAccess.deleteRowById, collections table case:" + e.getMessage());
+//            }
+//        }
+//        else if (table.equals("users")) {
+//            String sql = "DELETE FROM " + table + " WHERE userId = " + id.toString();
+//
+//            try {
+//                runQuery(sql);
+//            }
+//            catch (SQLException e) {
+//                System.out.println("SQLException in DBAccess.deleteRowById, users table case:" + e.getMessage());
+//            }
+//        }
+//        else {
+//            throw new IllegalArgumentException("IllegalArgumentException in DbAccess.getRowById: Invalid table: " + table);
+//        }
+//    }
+//
+//    public void updateRowById(Integer id, String table, String column, String newValue) throws SQLException {
+//        if (table.equals("items")) {
+//            String sql = "UPDATE " + table + " SET " + column + " = " + newValue + " WHERE itemId = " + id.toString();
+//
+//            try {
+//                runQuery(sql);
+//            }
+//            catch (SQLException e) {
+//                System.out.println("SQLException in DBAccess.updateRowById, items table case:" + e.getMessage());
+//            }
+//        }
+//
+//        else if (table.equals("collections")) {
+//            String sql = "Update " + table + " SET " + column + " = " + newValue + " WHERE id = " + id.toString();
+//
+//            try {
+//                runQuery(sql);
+//            }
+//            catch (SQLException e) {
+//                System.out.println("SQLException in DBAccess.updateRowById, collections table case:" + e.getMessage());
+//            }
+//        }
+//
+//        else if (table.equals("users")) {
+//            String sql = "Update " + table + " SET " + column + " = " + newValue + " WHERE userId = " + id.toString();
+//
+//            try {
+//                runQuery(sql);
+//            }
+//            catch (SQLException e) {
+//                System.out.println("SQLException in DBAccess.updateRowById, users table case:" + e.getMessage());
+//            }
+//        }
+//
+//        else {
+//            throw new IllegalArgumentException("IllegalArgumentException in DbAccess.getRowById: Invalid table: " + table);
+//        }
+//    }
+//
+
 }

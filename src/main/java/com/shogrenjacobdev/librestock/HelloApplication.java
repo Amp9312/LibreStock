@@ -18,17 +18,6 @@ public class HelloApplication extends Application {
             DbAccess db = new DbAccess();
             Inventory Inv = new Inventory(db);
 
-            Item idTest = Inv.getItemById(1);
-            Item skuTest = Inv.getItemBySku("ABC-DEF-GH");
-            Item nameTest = Inv.getItemByName("Test Item");
-            List<Item> namesTest = Inv.getItemsByName("Test Item");
-
-            System.out.println("idTest = " + idTest.toString() + "\n" +
-                    "skuTest = " + skuTest.toString() + "\n" +
-                    "nameTest = " + nameTest.toString() + "\n" +
-                    "namesTest = " + namesTest.toString()
-            );
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -48,6 +48,11 @@ public class Inventory {
 
         try {
             List<Map<String, Object>> result = db.runQuery("SELECT * FROM items WHERE name = ?", name);
+            System.out.println("Query returned rows: " + result.size());
+
+            if (!result.isEmpty()) {
+                System.out.println("Columns: " + result.get(0).keySet());
+            }
 
             Map<String, Object> item = result.getFirst();
 
@@ -71,7 +76,7 @@ public class Inventory {
             List<Map<String, Object>> result = db.runQuery("SELECT * FROM items WHERE name = ?", name);
             List<Item> items = new ArrayList<>();
 
-            for  (int i = 0; i < result.size(); i++) {
+            for (int i = 0; i < result.size(); i++) {
                 Map<String, Object> item = result.get(i);
                 int id = (int) item.get("itemId");
                 String sku = (String) item.get("sku");
@@ -116,6 +121,172 @@ public class Inventory {
         catch (SQLException e) {
             System.err.println("SQLException in Inventory.getItemByName: " + e.getMessage());
             return null;
+        }
+    }
+
+    public Item getItemByQuantity(int quantity) {
+        int itemId;
+        String itemName;
+        String itemSku;
+        int collection;
+        String description;
+        int  itemQuantity;
+
+        try {
+            List<Map<String, Object>> result = db.runQuery("SELECT * FROM items WHERE quantity = ?", quantity);
+
+            Map<String, Object> item = result.getFirst();
+            itemId = (int) item.get("itemId");
+            itemSku = (String) item.get("sku");
+            itemName = (String) item.get("name");
+            collection = (int) item.get("collection");
+            description = (String) item.get("description");
+            itemQuantity = (int) item.get("quantity");
+
+            return new Item(itemId, itemSku, itemName, itemQuantity, collection, description);
+        }
+        catch (SQLException e) {
+            System.err.println("SQLException in Inventory.getItemByQuantity: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<Item> getItemsByQuantity(int quantity) {
+
+        try {
+            List<Map<String, Object>> result = db.runQuery("SELECT * FROM items WHERE quantity = ?", quantity);
+            List<Item> items = new ArrayList<>();
+
+            for (int i = 0; i < result.size(); i++) {
+                Map<String, Object> item = result.get(i);
+                int itemId = (int) item.get("itemId");
+                String sku = (String) item.get("sku");
+                String itemName = (String) item.get("name");
+                int itemQuantity = (int) item.get("quantity");
+                int collection = (int) item.get("collection");
+                String description = (String) item.get("description");
+
+                items.add(new Item(itemId, sku, itemName, itemQuantity, collection, description));
+            }
+
+            return items;
+        }
+        catch (SQLException e) {
+            System.err.println("SQLException in Inventory.getItemsByQuantity: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public void deleteItemById(int id) {
+        try {
+            db.runQuery("DELETE FROM items WHERE id = ?", id);
+            System.out.println("Deleted item with id " + id);
+        }
+        catch (SQLException e) {
+            System.err.println("SQLException in Inventory.deleteItemById: " + e.getMessage());
+        }
+    }
+
+    public void deleteItemBySku(String sku) {
+        try {
+            db.runQuery("DELETE FROM items WHERE id = ?", sku);
+            System.out.println("Deleted item with sku " + sku);
+        }
+        catch (SQLException e) {
+            System.err.println("SQLException in Inventory.deleteItemBySku: " + e.getMessage());
+        }
+    }
+
+    public void deleteItemsByName(String name) {
+        try {
+            db.runQuery("DELETE FROM items WHERE name = ?", name);
+            System.out.println("Deleted ALL items with name " + name);
+        }
+        catch (SQLException e) {
+            System.err.println("SQLException in Inventory.deleteItemByName: " + e.getMessage());
+        }
+    }
+
+    public void deleteItemsByCollection(int collection) {
+        try {
+            db.runQuery("DELETE FROM items WHERE collection = ?", collection);
+            System.out.println("Deleted ALL items in collection " + collection);
+        }
+        catch (SQLException e) {
+            System.err.println("SQLException in Inventory.deleteItemByCollection: " + e.getMessage());
+        }
+    }
+
+    public void createItem(int itemId, String sku, String name, int quantity, int collection, String description) {
+        try {
+            String sql = "INSERT INTO items VALUES (?, ?, ?, ?, ?, ?)";
+            db.runQuery(sql, itemId, sku, name, quantity, collection, description);
+            System.out.println("Created item with name " + name);
+        }
+        catch (SQLException e) {
+            System.err.println("SQLException in Inventory.createItem: " + e.getMessage());
+        }
+    }
+
+    public Collection getCollectionById(int collId) {
+        try {
+            List<Map<String, Object>> result = db.runQuery("SELECT * FROM collections WHERE id = ?", collId);
+            Map<String, Object> coll = result.getFirst();
+
+            int collectionId = (int) coll.get("id");
+            String collectionName = (String) coll.get("name");
+            String type = (String) coll.get("type");
+            int size = (int) coll.get("size");
+
+            return new Collection(collectionId, collectionName, type, size);
+        }
+        catch (SQLException e) {
+            System.err.println("SQLException in Inventory.getCollectionById: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<Collection> getCollectionsByName(String name) {
+        try {
+            List<Map<String, Object>> result = db.runQuery("SELECT * FROM collections WHERE name = ?", name);
+            List<Collection> collections = new ArrayList<>();
+
+            for (int i = 0; i < result.size(); i++) {
+                Map<String, Object> coll = result.get(i);
+                int id = (int) coll.get("id");
+                String collName = (String) coll.get("name");
+                String type = (String) coll.get("type");
+                int size = (int) coll.get("size");
+
+                collections.add(new Collection(id, collName, type, size));
+            }
+
+            return collections;
+        }
+        catch (SQLException e) {
+            System.err.println("SQLException in Inventory.getCollectionsByName: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public void createCollection(int collectionId, String name, String type, int size) {
+        try {
+            String sql = "INSERT INTO collections VALUES (?, ?, ?, ?)";
+            db.runQuery(sql, collectionId, name, type, size);
+            System.out.println("Created collection with name " + name);
+        }
+        catch (SQLException e) {
+            System.err.println("SQLException in Inventory.createCollection: " + e.getMessage());
+        }
+    }
+
+    public void deleteCollectionById(int collectionId) {
+        try {
+            db.runQuery("DELETE FROM collections WHERE id = ?", collectionId);
+            System.out.println("Deleted collection with id " + collectionId);
+        }
+        catch (SQLException e) {
+            System.err.println("SQLException in Inventory.deleteCollectionById: " + e.getMessage());
         }
     }
 }
