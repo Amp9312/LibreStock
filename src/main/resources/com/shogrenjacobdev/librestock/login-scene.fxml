@@ -46,24 +46,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shogrenjacobdev.librestock.HelloController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
+            <MenuItem fx:id="loginquit_menu" mnemonicParsing="false" onAction="#quitMenuClick" text="Quit" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
@@ -82,7 +71,7 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+            <MenuItem mnemonicParsing="false" text="About LibreStock" />
           </items>
         </Menu>
       </menus>
@@ -119,12 +108,12 @@
                   </HBox>
                   <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="700.0">
                      <children>
-                        <Button fx:id="loginfts_button" mnemonicParsing="false" text="First Time Setup">
+                        <Button fx:id="loginfts_button" mnemonicParsing="false" onAction="#onFirstTimeButtonClick" text="First Time Setup">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="login_button" defaultButton="true" mnemonicParsing="false" text="Login">
+                        <Button fx:id="login_button" defaultButton="true" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>

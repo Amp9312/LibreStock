@@ -38,7 +38,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -48,7 +47,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shogrenjacobdev.librestock.DeleteCollectionController">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shogrenjacobdev.librestock.AdminNewItemController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -89,12 +88,12 @@
         </Menu>
       </menus>
     </MenuBar>
-      <Text fx:id="deletecollection_label" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete Collection">
+      <Text fx:id="edititem_label" strokeType="OUTSIDE" strokeWidth="0.0" text="Admin New Item">
          <VBox.margin>
             <Insets left="20.0" top="10.0" />
          </VBox.margin>
       </Text>
-      <Text fx:id="deleteiteminstructions_label" strokeType="OUTSIDE" strokeWidth="0.0" text="In order to delete collections, you must know the collection ID of the collection you wish to delete. If unsure, return to menu and select edit collection. This will enable you to look up the collection ID." wrappingWidth="578.6890258789062">
+      <Text fx:id="edititeminstructions_label" strokeType="OUTSIDE" strokeWidth="0.0" text="NOTE: Enter data in the fields, double check that they are correct, and submit to create a new entry in the inventory database. Make sure to include a valid collection name!" wrappingWidth="578.6890258789062">
          <VBox.margin>
             <Insets left="40.0" />
          </VBox.margin>
@@ -110,8 +109,8 @@
                <children>
                   <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
-                        <Label fx:id="deletecollectioncollectionID_label" prefHeight="18.0" prefWidth="102.0" text="Collection ID" />
-                        <TextField fx:id="deletecollectioncollectionID_textfield" prefHeight="26.0" prefWidth="226.0" />
+                        <Label fx:id="newitemitemname_label" prefHeight="18.0" prefWidth="102.0" text="Item Name" />
+                        <TextField fx:id="newitemitemname_textfield" prefHeight="26.0" prefWidth="226.0" />
                      </children>
                      <opaqueInsets>
                         <Insets />
@@ -120,49 +119,28 @@
                         <Insets left="10.0" />
                      </padding>
                   </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
-                        <Separator prefWidth="200.0">
-                           <HBox.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </HBox.margin>
-                        </Separator>
+                        <Label fx:id="newitemcollection_label" prefHeight="18.0" prefWidth="102.0" text="Collection" />
+                        <TextField fx:id="newitemcollection_textfield" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
-                        <Insets bottom="10.0" />
+                        <Insets left="10.0" />
                      </padding>
                   </HBox>
                   <HBox layoutX="20.0" layoutY="90.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
-                        <Label fx:id="deletecollectioncollectionname_label" prefHeight="28.0" prefWidth="102.0" text="Collection Name" wrapText="true" />
-                        <TextField fx:id="deletecollectioncollectionname_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <Label fx:id="newitemquantity_label" prefHeight="28.0" prefWidth="102.0" text="Quantity" wrapText="true" />
+                        <TextField fx:id="newitemquantity_textfield" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
                      </padding>
                   </HBox>
-                  <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
+                  <HBox fx:id="newitemsku_label" layoutX="20.0" layoutY="113.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
-                        <Label fx:id="deletecollectionnumitems_label" prefHeight="37.0" prefWidth="102.0" text="Number of Items" wrapText="true" />
-                        <TextField fx:id="deletecollectionnumitems_textfield" prefHeight="26.0" prefWidth="227.0" />
-                     </children>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </HBox>
-                  <HBox layoutX="20.0" layoutY="113.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
-                     <children>
-                        <Label fx:id="deletecollectionmaxsize_label" prefHeight="18.0" prefWidth="102.0" text="Max Size" />
-                        <TextField fx:id="deletecollectionmaxsize_textfield" prefHeight="26.0" prefWidth="227.0" />
-                     </children>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </HBox>
-                  <HBox layoutX="20.0" layoutY="162.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
-                     <children>
-                        <Label fx:id="deletecollectioncollectiontype_label" prefHeight="18.0" prefWidth="102.0" text="Collection Type" />
-                        <TextField fx:id="deletecollectioncollectiontype_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <Label fx:id="edititemquantity_label" prefHeight="18.0" prefWidth="102.0" text="SKU" />
+                        <TextField fx:id="newitemsku_textfield" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -173,7 +151,6 @@
                         <Insets left="10.0" />
                      </padding>
                   </HBox>
-                  <Text fx:id="deletecollectionhint_label" strokeType="OUTSIDE" strokeWidth="0.0" text="HINT: After hitting search, confirm details before deleting" />
                </children>
                <padding>
                   <Insets left="10.0" top="10.0" />
@@ -189,25 +166,17 @@
       </HBox>
       <HBox alignment="TOP_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="510.0">
          <children>
-            <Button fx:id="deletecollectionreturn_button" mnemonicParsing="false" onAction="#delcolreturnButtonClick" text="Return">
+            <Button fx:id="adminnewitemsubmit_button" mnemonicParsing="false" onAction="#adminnewitemSubmitButtonClick" text="Submit">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="deletecollectiondelete_button" defaultButton="true" mnemonicParsing="false" onAction="#delcolsubmitButtonClick" text="DELETE">
-               <HBox.margin>
-                  <Insets left="10.0" right="10.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="deletecollectionsearch_button" layoutX="450.0" layoutY="10.0" mnemonicParsing="false" onAction="#delcolsearchButtonClick" text="Search">
+            <Button fx:id="adminnewitemreturn_button" defaultButton="true" mnemonicParsing="false" onAction="#adminnewitemReturnButtonClick" text="Return">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>
             </Button>
          </children>
-         <VBox.margin>
-            <Insets top="10.0" />
-         </VBox.margin>
       </HBox>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS" />
   </children>

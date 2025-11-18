@@ -47,7 +47,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shogrenjacobdev.librestock.firsttimesetupcontroller">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -173,14 +173,14 @@
             <Insets left="10.0" top="20.0" />
          </VBox.margin>
       </HBox>
-      <HBox alignment="TOP_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="510.0">
+      <HBox alignment="TOP_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="510.0" >
          <children>
-            <Button fx:id="ftssubmit_button" mnemonicParsing="false" text="Submit">
+            <Button fx:id="ftssubmit_button" mnemonicParsing="false" text="Submit" onAction="#submitButtonClick">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="ftsreturn_button" defaultButton="true" mnemonicParsing="false" text="Return">
+            <Button fx:id="ftsreturn_button" defaultButton="true" mnemonicParsing="false" text="Return" onAction="#returnButtonClick">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>

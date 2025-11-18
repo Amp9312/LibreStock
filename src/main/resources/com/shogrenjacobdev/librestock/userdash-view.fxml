@@ -45,7 +45,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shogrenjacobdev.librestock.UserDashController">
   <children>
     <MenuBar fx:id="userdash_menubar" VBox.vgrow="NEVER">
       <menus>
@@ -90,17 +90,17 @@
                   </HBox>
                   <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="350.0">
                      <children>
-                        <Button fx:id="userdashedititem_button" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Edit Item">
+                        <Button fx:id="userdashedititem_button" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Edit Item" onAction="#editItemButtonClick">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="userdashnewitem_button" defaultButton="true" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="New Item">
+                        <Button fx:id="userdashnewitem_button" defaultButton="true" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="New Item" onAction="#newItemButtonClick">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="userdashlogout_button" layoutX="114.0" layoutY="10.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Log Out">
+                        <Button fx:id="userdashlogout_button" layoutX="114.0" layoutY="10.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Log Out" onAction="#onLogoutButtonClick">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>

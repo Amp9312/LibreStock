@@ -44,7 +44,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shogrenjacobdev.librestock.AdminDashController">
   <children>
     <MenuBar fx:id="admindashmenu_menubar" VBox.vgrow="NEVER">
       <menus>
@@ -61,20 +61,20 @@
         </Menu>
             <Menu mnemonicParsing="false" text="Item Options">
                <items>
-                  <MenuItem mnemonicParsing="false" text="New Item" />
+                  <MenuItem fx:id="adminnewitem_menu" mnemonicParsing="false" onAction="#adminNewItemMenuClick" text="New Item" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Edit Item" />
+                  <MenuItem fx:id="adminedititem_menu" mnemonicParsing="false" onAction="#adminEditItemMenuClick" text="Edit Item" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Item Deletion" />
+                  <MenuItem fx:id="admindeleteitem_menu" mnemonicParsing="false" onAction="#adminDeleteItemMenuClick" text="Item Deletion" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="User Management">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Add User" />
+                  <MenuItem fx:id="adminnewuser_menu" mnemonicParsing="false" onAction="#adminAddUserMenuClick" text="Add User" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Remove User" />
+                  <MenuItem fx:id="adminedituser_menu" mnemonicParsing="false" onAction="#adminRemoveUserMenuClick" text="Remove User" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Edit User" />
+                  <MenuItem fx:id="admindeleteuser_menu" mnemonicParsing="false" onAction="#adminEditUserItemMenuClick" text="Edit User" />
                </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Help">
@@ -143,17 +143,17 @@
                   </HBox>
                   <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="350.0">
                      <children>
-                        <Button fx:id="admindashcollectioncreation_button" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Collection Creation" wrapText="true">
+                        <Button fx:id="admindashcollectioncreation_button" mnemonicParsing="false" onAction="#colCreationButtonClick" prefHeight="100.0" prefWidth="100.0" text="Collection Creation" wrapText="true">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="admindashcollectionediting_button" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Collection Editing" wrapText="true">
+                        <Button fx:id="admindashcollectionediting_button" mnemonicParsing="false" onAction="#colEditingButtonClick" prefHeight="100.0" prefWidth="100.0" text="Collection Editing" wrapText="true">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="admindashcollectiondeletion_button" layoutX="114.0" layoutY="10.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Collection Deletion" wrapText="true">
+                        <Button fx:id="admindashcollectiondeletion_button" layoutX="114.0" layoutY="10.0" mnemonicParsing="false" onAction="#coldeletionButtonClick" prefHeight="100.0" prefWidth="100.0" text="Collection Deletion" wrapText="true">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
@@ -165,17 +165,17 @@
                   </HBox>
                   <HBox layoutX="20.0" layoutY="40.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="350.0">
                      <children>
-                        <Button fx:id="admindashexportinventory_button" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Export Inventory" wrapText="true">
+                        <Button fx:id="admindashexportinventory_button" mnemonicParsing="false" onAction="#exportinvenButtonClick" prefHeight="100.0" prefWidth="100.0" text="Export Inventory" wrapText="true">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="admindashimportinventory_button" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Import Inventory" wrapText="true">
+                        <Button fx:id="admindashimportinventory_button" mnemonicParsing="false" onAction="#importinvenButtonClick" prefHeight="100.0" prefWidth="100.0" text="Import Inventory" wrapText="true">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="admindashlogout_button" defaultButton="true" layoutX="114.0" layoutY="10.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Log Out">
+                        <Button fx:id="admindashlogout_button" defaultButton="true" layoutX="114.0" layoutY="10.0" mnemonicParsing="false" onAction="#adminlogoutButtonClick" prefHeight="100.0" prefWidth="100.0" text="Log Out">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
