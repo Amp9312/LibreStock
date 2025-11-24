@@ -9,21 +9,20 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-public class EditItemController {
+public class NewItemController {
     Stage stage;
-    @FXML private Button edititemreturn_button;
-    @FXML private Button edititemsubmit_button;
-    @FXML private Button edititemsearch_button; // saved for later even if not used currently
-    @FXML private MenuItem edititemquit_menu;
-    @FXML private MenuItem edititemaboutlibrestock_menu;
+    @FXML private Button newitemreturn_button;
+    @FXML private Button newitemsubmit_button;
+    @FXML private MenuItem newitemquit_menu;
+    @FXML private MenuItem newitemaboutlibrestock_menu;
 
     @FXML
-    private void edititemReturnButtonClick() throws IOException{
-        System.out.println("Returning to admin dash scene");
+    private void newitemReturnButtonClick() throws IOException{
+        System.out.println("Returning to user dash scene");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("userdash-view.fxml"));
         Parent root = loader.load();
 
-        Stage stage = (Stage)edititemreturn_button.getScene().getWindow();
+        Stage stage = (Stage)newitemreturn_button.getScene().getWindow();
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
@@ -31,29 +30,29 @@ public class EditItemController {
     }
 
     @FXML
-    private void ititemSubmitButtonClick() throws IOException{
+    private void newitemSubmitButtonClick() throws IOException{
         System.out.println("submitting data fr fr");
         /* put craaaaazy submit logic here later (some sort of update method for items in the db) */
     }
 
         @FXML
-    private void edititemSearchButtonClick() throws IOException{
+    private void newitemSearchButtonClick() throws IOException{
         System.out.println("searching data fr fr");
         /* put craaaaazy search logic here later (some sort of search method for items in the db) */
     }
 
-        @FXML
-    public void quitEditItemMenuClick() throws IOException{
+    @FXML
+    public void quitNewItemMenuClick() throws IOException{
         javafx.application.Platform.exit();
     }
 
     @FXML
-    public void openEditItemAboutMenuClick() throws IOException{
+    public void openNewItemAboutMenuClick() throws IOException{
         System.out.println("User Opened Docs...");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("librestockdocs.fxml"));
-        Parent root = loader.load();
+        FXMLLoader loader3 = new FXMLLoader(getClass().getResource("librestockdocs.fxml"));
+        Parent root = loader3.load();
 
-        Stage stage = (Stage)edititemreturn_button.getScene().getWindow();
+        Stage stage = (Stage)newitemreturn_button.getScene().getWindow();
         Scene scene = new Scene(root);
 
         stage.setScene(scene);

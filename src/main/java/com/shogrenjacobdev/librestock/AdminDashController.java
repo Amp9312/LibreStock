@@ -24,6 +24,8 @@ public class AdminDashController {
     @FXML private MenuItem adminnewuser_menu;
     @FXML private MenuItem adminedituser_menu;
     @FXML private MenuItem admindeleteuser_menu;
+    @FXML private MenuItem admindashquit_menu;
+    @FXML private MenuItem admindashaboutlibrestock_menu;
 
 
     @FXML
@@ -193,4 +195,22 @@ public class AdminDashController {
         stage.setScene(scene);
         stage.show();
 }
+
+@FXML
+    public void quitAdminDashMenuClick() throws IOException{
+        javafx.application.Platform.exit();
+    }
+
+    @FXML
+    public void openAdminDashAboutMenuClick() throws IOException{
+        System.out.println("User Opened Docs...");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("librestockdocs.fxml"));
+        Parent root = loader.load();
+
+        Stage stage = (Stage)admindashlogout_button.getScene().getWindow();
+        Scene scene = new Scene(root);
+
+        stage.setScene(scene);
+        stage.show();
+    }
 }

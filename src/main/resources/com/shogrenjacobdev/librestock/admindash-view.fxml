@@ -48,6 +48,11 @@
   <children>
     <MenuBar fx:id="admindashmenu_menubar" VBox.vgrow="NEVER">
       <menus>
+            <Menu fx:id="admindashfile" mnemonicParsing="false" text="File">
+              <items>
+                <MenuItem fx:id="admindashquit_menu" mnemonicParsing="false" onAction="#quitAdminDashMenuClick" text="Quit" />
+              </items>
+            </Menu>
         <Menu mnemonicParsing="false" text="Generate Report">
           <items>
             <MenuItem mnemonicParsing="false" text="All Items, A-Z" />
@@ -79,7 +84,7 @@
             </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+            <MenuItem fx:id="admindashaboutlibrestock_menu" mnemonicParsing="false" onAction="#openAdminDashAboutMenuClick" text="About LibreStock" />
           </items>
         </Menu>
       </menus>
