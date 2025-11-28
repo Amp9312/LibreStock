@@ -71,12 +71,12 @@ public List<Map<String, Object>> runQuery(String query, Object... params) throws
             return new ArrayList<>();
         } catch (SQLException e) {
             System.out.println("SQLException in DBAccess.runQuery: " + e.getMessage());
-=======
+//=======
             return null;
         }
         catch(SQLException e) {
             System.out.println("SQLException in DBAccess.runQuery:" + e.getMessage());
->>>>>>> upstream/master
+//>>>>>>> upstream/master
             return null;
         }
      }*/
