@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class ExportInventoryController {
     Stage stage;
@@ -32,6 +33,16 @@ public class ExportInventoryController {
     @FXML
     private void exportsubmitButtonClick() throws IOException{
         System.out.println("exporting data fr fr");
+        try {
+            DbAccess Db = new DbAccess();
+            Inventory Inv = new Inventory(Db);
+
+            Inv.ExportInventory();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
         /* put craaaaazy submit logic here later (some sort of export inventory method for collections in the db) */
     }
 

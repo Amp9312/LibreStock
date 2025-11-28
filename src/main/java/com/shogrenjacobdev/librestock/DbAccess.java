@@ -27,38 +27,59 @@ public class DbAccess {
      * EXAMPLE: runQuery("SELECT * FROM items WHERE itemId = ?", 1)
      * RETURNS: [{itemId=1, quantity=1, name=Test Item, description=null, collection=1, sku=ABC-DEF-GH}]
      */
-    public List<Map<String, Object>> runQuery(String query, Object... params) throws SQLException {
+public List<Map<String, Object>> runQuery(String query, Object... params) throws SQLException {
+        List<Map<String, Object>> result = new ArrayList<>();
+
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            for (int i = 0; i < params.length; i++) {
-                stmt.setObject(i + 1, params[i]);
+            // Set SQL parameters
+            if (params != null) {
+                for (int i = 0; i < params.length; i++) {
+                    stmt.setObject(i + 1, params[i]);
+                }
             }
 
             boolean isResultSet = stmt.execute();
 
+            // INSERT / UPDATE / DELETE → isResultSet = false
+            // SELECT → isResultSet = true
             if (isResultSet) {
                 try (ResultSet rs = stmt.getResultSet()) {
-                    List<Map<String, Object>> result = new ArrayList<>();
-                    ResultSetMetaData metaData = rs.getMetaData();
-                    int columnCount = metaData.getColumnCount();
+                    ResultSetMetaData meta = rs.getMetaData();
+                    int colCount = meta.getColumnCount();
 
                     while (rs.next()) {
                         Map<String, Object> row = new HashMap<>();
-                        for (int i = 1; i <= columnCount; i++) {
-                            row.put(metaData.getColumnName(i), rs.getObject(i));
+                        for (int i = 1; i <= colCount; i++) {
+                            String colName = meta.getColumnName(i);
+                            Object value = rs.getObject(i);
+                            row.put(colName, value);
                         }
                         result.add(row);
                     }
-
-                    return result;
                 }
+
+                return result.isEmpty() ? null : result;
             }
 
-            return new ArrayList<>();
-        } catch (SQLException e) {
-            System.out.println("SQLException in DBAccess.runQuery: " + e.getMessage());
+            // Non-SELECT statements (INSERT/UPDATE/DELETE) – caller doesn’t expect rows
             return null;
         }
     }
+
+/*
+<<<<<<< HEAD
+            return new ArrayList<>();
+        } catch (SQLException e) {
+            System.out.println("SQLException in DBAccess.runQuery: " + e.getMessage());
+=======
+            return null;
+        }
+        catch(SQLException e) {
+            System.out.println("SQLException in DBAccess.runQuery:" + e.getMessage());
+>>>>>>> upstream/master
+            return null;
+        }
+     }*/
 
     /*
      * Returns a specific row from the database as a generic hashmap

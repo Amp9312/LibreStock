@@ -1,11 +1,16 @@
 package com.shogrenjacobdev.librestock;
 
+import javafx.fxml.FXMLLoader;
+
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Inventory {
 
@@ -189,7 +194,7 @@ public class Inventory {
 
     public void deleteItemBySku(String sku) {
         try {
-            db.runQuery("DELETE FROM items WHERE id = ?", sku);
+            db.runQuery("DELETE FROM items WHERE sku = ?", sku);
             System.out.println("Deleted item with sku " + sku);
         }
         catch (SQLException e) {
@@ -287,6 +292,87 @@ public class Inventory {
         }
         catch (SQLException e) {
             System.err.println("SQLException in Inventory.deleteCollectionById: " + e.getMessage());
+        }
+    }
+
+    public void ExportTable(String table, String pathname) throws IOException {
+        LocalDateTime now = LocalDateTime.now();
+        File path = new File(pathname + now + "-" + table + ".csv");
+
+        System.out.println("Exporting " + table + " to " + path.getAbsolutePath());
+
+        if (!path.exists()) {
+            path.createNewFile();
+
+            try {
+                List<Map<String, Object>> results = db.runQuery("SELECT * FROM " +  table);
+                FileWriter csv = new FileWriter(path);
+                Set<String> headers =  results.getFirst().keySet();
+                ArrayList<String> headersList = new ArrayList<>();
+
+                for (String header : headers) {
+                    csv.append(header);
+                    csv.append(",");
+                    headersList.add(header);
+                    System.out.println("Adding header " + header);
+                }
+                csv.append("\n");
+
+                System.out.println(headersList.toString());
+                System.out.println(results.size());
+
+                for (int i = 0; i < results.size(); i++) {
+                    for (int j = 0; j < headersList.size(); j++) {
+                        System.out.println(results.get(i).get(headersList.get(j)));
+                        Object cell = results.get(i).get(headersList.get(j));
+
+                        if (cell == null) {
+                            cell = "";
+                        }
+
+                        String cellString = cell.toString();
+
+                        csv.append(cellString);
+                        csv.append(",");
+                    }
+                    csv.append("\n");
+                    System.out.println("---------------");
+                }
+
+                csv.flush();
+                csv.close();
+            }
+            catch (SQLException e) {
+                System.err.println("SQLException in Inventory.ExportTable: " + e.getMessage());
+            }
+        }
+    }
+
+    public void ExportInventory() {
+        LocalDateTime now = LocalDateTime.now();
+        String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'users'";
+        try {
+            List<Map<String, Object>> tables = db.runQuery(sql);
+            System.out.println(tables.toString());
+
+            File outputFolder = new File("./inventory-export-" + now);
+
+            if (!outputFolder.exists()) {
+                outputFolder.mkdir();
+            }
+
+            for (Map<String, Object> table : tables) {
+                String tableName = table.get("name").toString();
+                try {
+                    ExportTable(tableName, "./inventory-export-" + now + "/");
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.err.println("SQLException in Inventory.ExportInventory: " + e.getMessage());
         }
     }
 }
