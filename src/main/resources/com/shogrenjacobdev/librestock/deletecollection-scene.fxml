@@ -109,7 +109,7 @@
                   <HBox layoutX="20.0" layoutY="90.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="deletecollectioncollectionname_label" prefHeight="28.0" prefWidth="102.0" text="Collection Name" wrapText="true" />
-                        <TextField fx:id="deletecollectioncollectionname_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="deletecollectioncollectionname_textfield" editable="false" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -118,7 +118,7 @@
                   <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="deletecollectionnumitems_label" prefHeight="37.0" prefWidth="102.0" text="Number of Items" wrapText="true" />
-                        <TextField fx:id="deletecollectionnumitems_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="deletecollectionnumitems_textfield" editable="false" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -127,7 +127,7 @@
                   <HBox layoutX="20.0" layoutY="113.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="deletecollectionmaxsize_label" prefHeight="18.0" prefWidth="102.0" text="Max Size" />
-                        <TextField fx:id="deletecollectionmaxsize_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="deletecollectionmaxsize_textfield" editable="false" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -136,7 +136,7 @@
                   <HBox layoutX="20.0" layoutY="162.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="deletecollectioncollectiontype_label" prefHeight="18.0" prefWidth="102.0" text="Collection Type" />
-                        <TextField fx:id="deletecollectioncollectiontype_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="deletecollectioncollectiontype_textfield" editable="false" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />

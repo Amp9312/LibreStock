@@ -17,6 +17,7 @@ public class UserDashController {
     @FXML private MenuItem userdashquit_menu;
     @FXML private MenuItem userdashaboutlibrestock_menu;
 
+
     @FXML
     private void newItemButtonClick() throws IOException{
         System.out.println("Making new item...");
@@ -73,3 +74,4 @@ public class UserDashController {
         stage.show();
     }
 }
+

@@ -84,7 +84,7 @@
                   <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="newitemitemname_label" prefHeight="18.0" prefWidth="102.0" text="Item Name" />
-                        <TextField fx:id="newitemitemname_textfield" prefHeight="26.0" prefWidth="226.0" />
+                        <TextField fx:id="adminnewitemitemname_textfield" prefHeight="26.0" prefWidth="226.0" />
                      </children>
                      <opaqueInsets>
                         <Insets />
@@ -96,7 +96,7 @@
                   <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="newitemcollection_label" prefHeight="18.0" prefWidth="102.0" text="Collection" />
-                        <TextField fx:id="newitemcollection_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="adminnewitemcollection_textfield" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -105,7 +105,7 @@
                   <HBox layoutX="20.0" layoutY="90.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="newitemquantity_label" prefHeight="28.0" prefWidth="102.0" text="Quantity" wrapText="true" />
-                        <TextField fx:id="newitemquantity_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="adminnewitemquantity_textfield" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -114,7 +114,7 @@
                   <HBox fx:id="newitemsku_label" layoutX="20.0" layoutY="113.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="edititemquantity_label" prefHeight="18.0" prefWidth="102.0" text="SKU" />
-                        <TextField fx:id="newitemsku_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="adminnewitemsku_textfield" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />

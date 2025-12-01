@@ -38,6 +38,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -52,6 +53,8 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
+                  <MenuItem fx:id="adminedititemnew_menu" mnemonicParsing="false" onAction="#newEditItemMenuClick" text="New" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="adminedititemquit_menu" mnemonicParsing="false" onAction="#quitAdminEditItemMenuClick" text="Quit" />
           </items>
         </Menu>
@@ -96,7 +99,7 @@
                   <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="edititemcollection_label" prefHeight="18.0" prefWidth="102.0" text="Collection" />
-                        <TextField fx:id="edititemcollection_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="edititemcollection_textfield" editable="false" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -105,7 +108,7 @@
                   <HBox layoutX="20.0" layoutY="90.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="edititemitemname_label" prefHeight="28.0" prefWidth="102.0" text="Item Name" wrapText="true" />
-                        <TextField fx:id="edititemitemname_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="edititemitemname_textfield" editable="false" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -114,7 +117,7 @@
                   <HBox layoutX="20.0" layoutY="113.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="edititemquantity_label" prefHeight="18.0" prefWidth="102.0" text="Quantity" />
-                        <TextField fx:id="edititemquantity_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="edititemquantity_textfield" editable="false" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -123,7 +126,7 @@
                   <HBox layoutX="20.0" layoutY="162.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="edititemsku_label" prefHeight="18.0" prefWidth="102.0" text="SKU" />
-                        <TextField fx:id="edititemsku_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="edititemsku_textfield" editable="false" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />

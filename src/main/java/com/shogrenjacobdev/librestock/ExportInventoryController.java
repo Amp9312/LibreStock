@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -16,6 +17,9 @@ public class ExportInventoryController {
     @FXML private Button exportinventorysubmit_button; // saved for later even if not used currently
     @FXML private MenuItem exportinventoryquit_menu;
     @FXML private MenuItem exportinventoryaboutlibrestock_menu;
+    @FXML private TextField exportinventoryfilename_textfield;
+    @FXML private TextField exportinventoryusername_textfield;
+    @FXML private TextField exportinventorypassword_textfield;
 
     @FXML
     private void exportreturnButtonClick() throws IOException{
@@ -33,6 +37,13 @@ public class ExportInventoryController {
     @FXML
     private void exportsubmitButtonClick() throws IOException{
         System.out.println("exporting data fr fr");
+
+        String fileName = exportinventoryfilename_textfield.getText();
+        String adminuser = exportinventoryusername_textfield.getText();
+        String adminpass = exportinventorypassword_textfield.getText();
+
+        // TODO - Check creds, export csv or similar tabular file format with the file named as the file name
+
         try {
             DbAccess Db = new DbAccess();
             Inventory Inv = new Inventory(Db);

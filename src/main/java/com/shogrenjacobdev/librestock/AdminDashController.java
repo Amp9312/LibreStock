@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -26,6 +27,11 @@ public class AdminDashController {
     @FXML private MenuItem admindeleteuser_menu;
     @FXML private MenuItem admindashquit_menu;
     @FXML private MenuItem admindashaboutlibrestock_menu;
+
+    @FXML private Label admindashtotcal_value;
+    @FXML private Label admindashtotitem_value;
+    @FXML private Label admindashavgitem_value;
+    @FXML private Label admindashwelcome_value;
 
 
     @FXML
@@ -212,5 +218,26 @@ public class AdminDashController {
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    // NOTE: This runs after the window has been opened/set-up. If something needs to access the fxml properties after opening the window, it gets done here. 
+    @FXML
+    public void initialize(){
+        System.out.println("Dashboad is loading stats...");
+        /*Process should work as follows:
+        1.) Create DB query for the following values: 
+            a.) Total number of collections 
+                i.) Just a count on the number of values in the collection table (call it value totCol)
+            b.) Total number of items
+                i.) Just a count on the number of values in the item table (call it value totItem)
+            c.) Average number of items in collection
+                i.) This might be a bit tough - lets come back this or replace with something else
+        2.) Populate these values
+        
+        admindashtotcal_value.setText(totCol);
+        admindashtotitem_value.setText(totItem);        
+                
+                */
+                
     }
 }

@@ -1,3 +1,5 @@
+// NOTE: THIS SCENE NEVER GETS USED (ONLY ADMINDELETEITEM). ONLY KEEPING IT HERE UNTIL I CAN CONFIRM I CAN DELETE WITHOUT BREAKING EVERYTHING - Anthony
+
 package com.shogrenjacobdev.librestock;
 
 import javafx.fxml.FXML;
@@ -34,7 +36,7 @@ public class DeleteItemController {
     @FXML
     private void delitemsearchButtonClick() throws IOException{
         System.out.println("searching data fr fr");
-        /* put craaaaazy submit logic here later (some sort of search method for items in the db) */
+
     }
         @FXML
     private void delitemsubmitButtonClick() throws IOException{

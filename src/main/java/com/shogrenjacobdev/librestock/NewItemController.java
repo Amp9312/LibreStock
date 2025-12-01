@@ -4,8 +4,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import java.io.IOException;
 
@@ -15,6 +18,25 @@ public class NewItemController {
     @FXML private Button newitemsubmit_button;
     @FXML private MenuItem newitemquit_menu;
     @FXML private MenuItem newitemaboutlibrestock_menu;
+    @FXML private TextField newitemitemname_textfield;
+    @FXML private TextField newitemcollection_textfield;
+    @FXML private TextField newitemquantity_textfield;
+    @FXML private TextField newitemsku_textfield;
+
+    private void showMessage(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("LibreStock Notification");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public void clearFields() throws IOException{
+        newitemitemname_textfield.clear();
+        newitemcollection_textfield.clear();
+        newitemquantity_textfield.clear();
+        newitemsku_textfield.clear();
+    }
 
     @FXML
     private void newitemReturnButtonClick() throws IOException{
@@ -32,13 +54,24 @@ public class NewItemController {
     @FXML
     private void newitemSubmitButtonClick() throws IOException{
         System.out.println("submitting data fr fr");
-        /* put craaaaazy submit logic here later (some sort of update method for items in the db) */
-    }
+        /*This process works as follows:
+        1.) Capture input from fields
+        2.) Match collection with existing collection name 
+        2.5) If no existing collection, one is made - creating new entry in collectionDB
+        3.) Create new item record in item DB*/
 
-        @FXML
-    private void newitemSearchButtonClick() throws IOException{
-        System.out.println("searching data fr fr");
-        /* put craaaaazy search logic here later (some sort of search method for items in the db) */
+        String enteredItemName = newitemitemname_textfield.getText();
+        String enteredCollection = newitemcollection_textfield.getText();
+        String enteredQuantity = newitemquantity_textfield.getText();
+        String enteredSKU = newitemsku_textfield.getText();
+
+        // TODO: Match collection name against all collection names in collection DB
+
+        // TODO: Create collection (or inherit method from add collection controller?)
+
+        // TODO: Create item
+        // showMessage("Item Made! Press Enter to Continue");
+        // clearFields();
     }
 
     @FXML
@@ -58,4 +91,5 @@ public class NewItemController {
         stage.setScene(scene);
         stage.show();
     }
+
 }

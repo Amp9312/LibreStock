@@ -85,7 +85,7 @@
                   <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="deleteitemitemID_label" prefHeight="18.0" prefWidth="102.0" text="itemID" />
-                        <TextField fx:id="deleteitemitemID_textfield" prefHeight="26.0" prefWidth="226.0" />
+                        <TextField fx:id="admindeleteitemitemID_textfield" prefHeight="26.0" prefWidth="226.0" />
                      </children>
                      <opaqueInsets>
                         <Insets />
@@ -109,7 +109,7 @@
                   <HBox layoutX="20.0" layoutY="90.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="deleteitemitemname_label" prefHeight="28.0" prefWidth="102.0" text="Item Name" wrapText="true" />
-                        <TextField fx:id="deleteitemitemname_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="admindeleteitemitemname_textfield" editable="false" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -118,7 +118,7 @@
                   <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="deleteitemcollection_label" prefHeight="18.0" prefWidth="102.0" text="Collection" />
-                        <TextField fx:id="deleteitemcollection_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="admindeleteitemcollection_textfield" editable="false" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -127,7 +127,7 @@
                   <HBox layoutX="20.0" layoutY="113.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="deleteitemquantity_label" prefHeight="18.0" prefWidth="102.0" text="Quantity" />
-                        <TextField fx:id="deleteitemquantity_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="admindeleteitemquantity_textfield" editable="false" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -136,7 +136,7 @@
                   <HBox layoutX="20.0" layoutY="162.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                      <children>
                         <Label fx:id="deleteitemsku_label" prefHeight="18.0" prefWidth="102.0" text="SKU" />
-                        <TextField fx:id="deleteitemsku_textfield" prefHeight="26.0" prefWidth="227.0" />
+                        <TextField fx:id="admindeleteitemsku_textfield" editable="false" prefHeight="26.0" prefWidth="227.0" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
