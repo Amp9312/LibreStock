@@ -49,27 +49,44 @@ public class HelloController {
             Map<String, Object> userRow = db.findUserByCredentials(username, password);
 
             if (userRow == null) {
+
                 showError("Invalid username or password.");
                 return;
             }
+            // 1) Extract user info from the row
+        //    Column names: userId, firstName, lastName, role, username
+            Number userIdNum = (Number) userRow.get("userId");
+            int userId = (userIdNum != null) ? userIdNum.intValue() : -1;
 
-            // Decide which dashboard to load based on role
-            String role = (String) userRow.get("role");
-            FXMLLoader loader;
+            String firstName = (String) userRow.get("firstName");
+            String lastName  = (String) userRow.get("lastName");
+            String role      = (String) userRow.get("role");
+            String dbUsername = (String) userRow.get("username");
 
-            if ("AD".equalsIgnoreCase(role)) {
-                // Admin
-                loader = new FXMLLoader(getClass().getResource("admindash-view.fxml"));
-            } else {
-                // Standard user
-                loader = new FXMLLoader(getClass().getResource("userdash-view.fxml"));
-            }
+            // 2) Is this user an admin?
+            boolean isAdmin = "AD".equalsIgnoreCase(role);
 
-            Parent root = loader.load();
-            Stage stage = (Stage) login_button.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
+            // 3) Remember the logged-in user globally
+            CurrentUser.setUser(
+                userId,
+                dbUsername != null ? dbUsername : username,
+                firstName,
+                lastName,
+                isAdmin
+        );
+
+            // 4) Decide which dashboard to load based on role
+        FXMLLoader loader;
+        if (isAdmin) {
+            loader = new FXMLLoader(getClass().getResource("admindash-view.fxml"));
+        } else {
+            loader = new FXMLLoader(getClass().getResource("userdash-view.fxml"));
+        }
+        Parent root = loader.load();
+        Stage stage = (Stage) login_button.getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
 
         } catch (SQLException e) {
             e.printStackTrace();

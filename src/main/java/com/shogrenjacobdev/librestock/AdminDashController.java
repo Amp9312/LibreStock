@@ -1,5 +1,6 @@
 package com.shogrenjacobdev.librestock;
 
+import javafx.scene.control.Label;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -26,6 +27,7 @@ public class AdminDashController {
     @FXML private MenuItem admindeleteuser_menu;
     @FXML private MenuItem admindashquit_menu;
     @FXML private MenuItem admindashaboutlibrestock_menu;
+    @FXML private Label admindashwelcome_value;
 
 
     @FXML
@@ -40,6 +42,16 @@ public class AdminDashController {
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    public void initialize() {
+        String firstName = CurrentUser.getFirstName();
+        if (firstName != null && !firstName.isEmpty()) {
+            admindashwelcome_value.setText(firstName);
+        } else {
+            admindashwelcome_value.setText("");
+        }
     }
 
     @FXML
