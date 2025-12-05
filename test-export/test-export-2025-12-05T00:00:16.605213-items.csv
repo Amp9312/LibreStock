@@ -1,0 +1,3 @@
+itemId,quantity,name,description,collection,sku,
+1,1,Test Item,,1,ABC-DEF-GH,
+2,1,New Test Item,Another test item!,1,123-345-78,

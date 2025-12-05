@@ -297,7 +297,7 @@ public class Inventory {
 
     public void ExportTable(String table, String pathname) throws IOException {
         LocalDateTime now = LocalDateTime.now();
-        File path = new File(pathname + now + "-" + table + ".csv");
+        File path = new File( pathname + "/" + pathname + "-" + now + "-" + table + ".csv");
 
         System.out.println("Exporting " + table + " to " + path.getAbsolutePath());
 
@@ -348,14 +348,14 @@ public class Inventory {
         }
     }
 
-    public void ExportInventory() {
+    public void ExportInventory(String fileName) {
         LocalDateTime now = LocalDateTime.now();
         String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'users'";
         try {
             List<Map<String, Object>> tables = db.runQuery(sql);
             System.out.println(tables.toString());
 
-            File outputFolder = new File("./inventory-export-" + now);
+            File outputFolder = new File("./" + fileName);
 
             if (!outputFolder.exists()) {
                 outputFolder.mkdir();
@@ -364,7 +364,8 @@ public class Inventory {
             for (Map<String, Object> table : tables) {
                 String tableName = table.get("name").toString();
                 try {
-                    ExportTable(tableName, "./inventory-export-" + now + "/");
+                    // + "/inventory-export-" + now + "/"
+                    ExportTable(tableName, fileName);
                 }
                 catch (IOException e) {
                     e.printStackTrace();

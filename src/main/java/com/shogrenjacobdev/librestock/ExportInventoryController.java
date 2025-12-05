@@ -9,7 +9,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import javafx.scene.control.Alert;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 public class ExportInventoryController {
     Stage stage;
@@ -34,6 +38,22 @@ public class ExportInventoryController {
         stage.show();
     }
 
+    private void showInfo(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Export Inventory");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Export Inventory Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     @FXML
     private void exportsubmitButtonClick() throws IOException{
         System.out.println("exporting data fr fr");
@@ -48,7 +68,27 @@ public class ExportInventoryController {
             DbAccess Db = new DbAccess();
             Inventory Inv = new Inventory(Db);
 
-            Inv.ExportInventory();
+            List<Map<String, Object>> usersWithUsername = Db.runQuery("SELECT * FROM users WHERE username = ?", adminuser);
+
+            if (usersWithUsername == null) {
+                showError("Admin with given username does not exist.");
+                throw new IOException("Admin with given username does not exist.");
+            }
+
+            Map<String, Object> user = usersWithUsername.getFirst();
+
+            if (user.get("password").equals(adminpass)) {
+                Inv.ExportInventory(fileName);
+                System.out.println("Successfully exported inventory");
+                showInfo("Inventory successfully exported!");
+            }
+            else {
+                showError("Password Incorrect!");
+                throw new IOException("Admin with given password does not match.");
+            }
+        }
+        catch(IOException k) {
+            System.err.println(k.getMessage());
         }
         catch (SQLException e)
         {

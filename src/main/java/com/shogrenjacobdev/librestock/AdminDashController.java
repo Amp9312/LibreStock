@@ -1,14 +1,19 @@
 package com.shogrenjacobdev.librestock;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
-import java.io.IOException;
 
 public class AdminDashController {
     Stage stage;
@@ -224,6 +229,58 @@ public class AdminDashController {
     @FXML
     public void initialize(){
         System.out.println("Dashboad is loading stats...");
+
+        try {
+            DbAccess db = new DbAccess();
+            List<Map<String, Object>> totColList = db.runQuery("SELECT COUNT(*) FROM collections");
+            Map<String, Object> totColMap = totColList.getFirst();
+            Object totCol = totColMap.get("COUNT(*)");
+
+            System.out.println(totCol.toString());
+            admindashtotcal_value.setText(totCol.toString());
+
+            List<Map<String, Object>> totItemList = db.runQuery("SELECT COUNT(*) FROM items");
+            Map<String, Object> totItemMap = totItemList.getFirst();
+            Object totItem = totItemMap.get("COUNT(*)");
+
+            admindashtotitem_value.setText(totItem.toString());
+
+            // Run sql query to get the quantity and collection of all items
+            // Create empty dictionary
+            // use collection as key and amount of items as data
+            // go through sql response, get the collection, check if collection is key in new dict, if not create a new entry, if so add to the running total
+            // Once done, go through new dict and add up data and get an average
+            HashMap<String, Integer> collectionCounts = new HashMap<>();
+            List<Map<String, Object>> itemsResponse = db.runQuery("select quantity, collection from items");
+
+            for (Map<String, Object> item : itemsResponse) {
+                Integer itemQuantity = (Integer) item.get("quantity");
+
+                if (!collectionCounts.containsKey(item.get("collection").toString())) {
+                    collectionCounts.put(item.get("collection").toString(), itemQuantity);
+                }
+                else {
+                    Integer loadedCount = collectionCounts.get(item.get("collection").toString());
+                    loadedCount += itemQuantity;
+
+                    collectionCounts.put(item.get("collection").toString(), loadedCount);
+                }
+            }
+
+            System.out.println(collectionCounts.toString());
+            
+            Integer totalItems = 0;
+            for (Integer i : collectionCounts.values()) {
+                totalItems += i;
+            }
+
+            Integer avgItem = totalItems / collectionCounts.size();
+            System.out.println(avgItem.toString());
+            admindashavgitem_value.setText(avgItem.toString());
+
+        } catch (SQLException e) {
+            e.getMessage();
+        }
         /*Process should work as follows:
         1.) Create DB query for the following values: 
             a.) Total number of collections 
@@ -235,7 +292,8 @@ public class AdminDashController {
         2.) Populate these values
         
         admindashtotcal_value.setText(totCol);
-        admindashtotitem_value.setText(totItem);        
+        admindashtotitem_value.setText(totItem);
+        admindashavgitem_value.setText(avgItem);        
                 
                 */
                 
