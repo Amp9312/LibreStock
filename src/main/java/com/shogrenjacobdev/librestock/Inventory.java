@@ -29,8 +29,12 @@ public class Inventory {
         String description;
 
         Map<String, Object> result = db.getRowById(id, "items");
-        System.out.println(result.toString());
+        // System.out.println(result.toString());
 
+        if (result == null) {
+            Testing.TestFail("getItemById", "Result returned null.");
+            return null;
+        }
 
         itemId = (int) result.get("itemId");
         sku = (String) result.get("sku");
@@ -38,6 +42,8 @@ public class Inventory {
         quantity = (int) result.get("quantity");
         collection = (int) result.get("collection");
         description = (String) result.get("description");
+
+        Testing.TestPass("getItemById", "All row contents retrieved successfully");
 
         return new Item(itemId, sku, name, quantity, collection, description);
     }
@@ -494,7 +500,6 @@ public class Inventory {
             for (File file : importFiles) {
                 ImportTable(file);
             }
-    
             System.out.println("Tables imported successfully.");
             
         } 
