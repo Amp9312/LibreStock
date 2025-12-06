@@ -252,31 +252,37 @@ public class AdminDashController {
             // Once done, go through new dict and add up data and get an average
             HashMap<String, Integer> collectionCounts = new HashMap<>();
             List<Map<String, Object>> itemsResponse = db.runQuery("select quantity, collection from items");
+            String nullResponse = "0";
 
-            for (Map<String, Object> item : itemsResponse) {
-                Integer itemQuantity = (Integer) item.get("quantity");
-
-                if (!collectionCounts.containsKey(item.get("collection").toString())) {
-                    collectionCounts.put(item.get("collection").toString(), itemQuantity);
-                }
-                else {
-                    Integer loadedCount = collectionCounts.get(item.get("collection").toString());
-                    loadedCount += itemQuantity;
-
-                    collectionCounts.put(item.get("collection").toString(), loadedCount);
-                }
+            if (itemsResponse == null) {
+                admindashavgitem_value.setText(nullResponse);
             }
-
-            System.out.println(collectionCounts.toString());
-            
-            Integer totalItems = 0;
-            for (Integer i : collectionCounts.values()) {
-                totalItems += i;
+            else {
+                for (Map<String, Object> item : itemsResponse) {
+                    Integer itemQuantity = (Integer) item.get("quantity");
+    
+                    if (!collectionCounts.containsKey(item.get("collection").toString())) {
+                        collectionCounts.put(item.get("collection").toString(), itemQuantity);
+                    }
+                    else {
+                        Integer loadedCount = collectionCounts.get(item.get("collection").toString());
+                        loadedCount += itemQuantity;
+    
+                        collectionCounts.put(item.get("collection").toString(), loadedCount);
+                    }
+                }
+    
+                System.out.println(collectionCounts.toString());
+                
+                Integer totalItems = 0;
+                for (Integer i : collectionCounts.values()) {
+                    totalItems += i;
+                }
+    
+                Integer avgItem = totalItems / collectionCounts.size();
+                System.out.println(avgItem.toString());
+                admindashavgitem_value.setText(avgItem.toString());
             }
-
-            Integer avgItem = totalItems / collectionCounts.size();
-            System.out.println(avgItem.toString());
-            admindashavgitem_value.setText(avgItem.toString());
 
         } catch (SQLException e) {
             e.getMessage();

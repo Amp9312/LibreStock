@@ -1,10 +1,10 @@
 package com.shogrenjacobdev.librestock;
 
-import javafx.fxml.FXMLLoader;
-
-import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -306,6 +306,11 @@ public class Inventory {
 
             try {
                 List<Map<String, Object>> results = db.runQuery("SELECT * FROM " +  table);
+
+                if (results == null) {
+                    return;
+                }
+
                 FileWriter csv = new FileWriter(path);
                 Set<String> headers =  results.getFirst().keySet();
                 ArrayList<String> headersList = new ArrayList<>();
@@ -375,5 +380,127 @@ public class Inventory {
         catch (SQLException e) {
             System.err.println("SQLException in Inventory.ExportInventory: " + e.getMessage());
         }
+    }
+
+    public void ImportTable(File fileName) {
+        System.out.println(fileName.toString());
+        String[] fileNameTokens = fileName.toString().split("-");
+        String tableName = fileNameTokens[fileNameTokens.length - 1];
+        int fileExt = tableName.lastIndexOf('.');
+
+        tableName = tableName.substring(0, fileExt);
+
+        System.out.println("Table name: " + tableName);
+
+        if (tableName.equals("collections")) {
+            String sql = "CREATE TABLE collections (id integer primary key, name varchar(20), type varchar(20), size integer);";
+            try {
+                db.runQuery(sql);
+
+                try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+                    String row;
+                    reader.readLine(); // Skip line one (headers)
+
+                    while ((row = reader.readLine()) != null) {
+                        String[] rowVals = row.split(",");
+                        int sizeVal = Integer.valueOf(rowVals[0]); // Unboxing Objects into primitives...
+                        int idVal = Integer.valueOf(rowVals[2]);
+
+                        String rowSql = "INSERT INTO collections (size, name, id, type) VALUES (?,?,?,?)";
+                        db.runQuery(rowSql, sizeVal, rowVals[1], idVal, rowVals[3]);
+                    }
+                }
+                catch (IOException e) {
+                    System.out.println("IOException in ImportTable: " + e.getMessage());
+                }
+            } 
+            catch (SQLException e) {
+                System.out.println("SQLException in ImportTable, collections case: " + e.getMessage());
+            }
+        }
+        else if (tableName.equals("items")) {
+            String sql = "CREATE TABLE items (itemId integer primary key, sku varchar(10), name varchar(50), quantity integer, collection integer, description varchar(255));";
+            try {
+                db.runQuery(sql);
+
+                try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+                    String row;
+                    reader.readLine(); // Skip line one (headers)
+
+                    while ((row = reader.readLine()) != null) {
+                        String[] rowVals = row.split(",");
+                        int idVal = Integer.valueOf(rowVals[0]); // Unboxing Objects into primitives...
+                        int quantVal = Integer.valueOf(rowVals[1]);
+                        int collectionVal = Integer.valueOf(rowVals[4]);
+
+                        String rowSql = "INSERT INTO items (itemId, quantity, name, description, collection, sku) VALUES (?,?,?,?,?,?)";
+                        db.runQuery(rowSql, idVal, quantVal, rowVals[2], rowVals[3], collectionVal, rowVals[5]);
+                    }
+                }
+                catch (IOException e) {
+                    System.out.println("IOException in ImportTable: " + e.getMessage());
+                }
+            } 
+            catch (SQLException e) {
+                System.out.println("SQLException in ImportTable, collections case: " + e.getMessage());
+            }
+        }
+
+        System.out.println("Table " + tableName + " imported.");
+    }
+
+    public void ClearDatabase() {
+        try {
+            String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'users'";
+            List<Map<String, Object>> oldTables = db.runQuery(sql);
+
+            System.out.println("Old Table names: " + oldTables.toString());
+
+            for (Map<String, Object> table : oldTables) {
+                String tableName = (String) table.get("name");
+                String dropSql = "DROP TABLE IF EXISTS " + tableName;
+
+                db.runQuery(dropSql);
+            }
+
+            System.out.println("Original database successfully cleared");
+        }
+        catch (SQLException e) {
+            System.out.println("SQLException in ClearDatabase: " + e.getMessage());
+        }
+    }
+
+    public void ImportInventory(String folderName) {
+        LocalDateTime now = LocalDateTime.now();
+        String path = "./" + folderName;
+        File importFolder = new File(path);
+
+        if (!importFolder.exists()) {
+            System.out.println("Import folder DNE");
+            return;
+        }
+        
+        if (!importFolder.isDirectory()) {
+            System.out.println("Import must be a folder.");
+            return;
+        }
+
+        File[] importFiles = importFolder.listFiles();
+
+        try {
+            ExportInventory("Backup-" + now);            
+            ClearDatabase();
+
+            for (File file : importFiles) {
+                ImportTable(file);
+            }
+    
+            System.out.println("Tables imported successfully.");
+            
+        } 
+        catch (Exception e) {
+            System.out.println("Exception in Inventory.ImportInventory: " + e.getMessage());
+        }
+        
     }
 }
