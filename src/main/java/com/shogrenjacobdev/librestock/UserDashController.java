@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import java.io.IOException;
+import javafx.scene.control.Label;
 
 public class UserDashController {
     Stage stage;
@@ -16,6 +17,7 @@ public class UserDashController {
     @FXML private Button userdashnewitem_button;
     @FXML private MenuItem userdashquit_menu;
     @FXML private MenuItem userdashaboutlibrestock_menu;
+    @FXML private Label userdashusername_label;
 
 
     @FXML
@@ -30,6 +32,19 @@ public class UserDashController {
         stage.setScene(scene);
         stage.show();
     }
+
+    
+    @FXML
+    public void initialize() {
+        String firstName = CurrentUser.getFirstName();
+        if (firstName != null && !firstName.isEmpty()) {
+            userdashusername_label.setText(firstName);
+        } else {
+            userdashusername_label.setText("");
+        }
+    }
+
+
     @FXML
     private void editItemButtonClick() throws IOException{
         System.out.println("Editing item...");

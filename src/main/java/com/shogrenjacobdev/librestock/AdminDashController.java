@@ -1,7 +1,6 @@
 package com.shogrenjacobdev.librestock;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +31,11 @@ public class AdminDashController {
     @FXML private MenuItem admindeleteuser_menu;
     @FXML private MenuItem admindashquit_menu;
     @FXML private MenuItem admindashaboutlibrestock_menu;
+    @FXML private Label admindashwelcome_value;
 
     @FXML private Label admindashtotcal_value;
     @FXML private Label admindashtotitem_value;
     @FXML private Label admindashavgitem_value;
-    @FXML private Label admindashwelcome_value;
 
 
     @FXML
@@ -225,83 +224,76 @@ public class AdminDashController {
         stage.show();
     }
 
-    // NOTE: This runs after the window has been opened/set-up. If something needs to access the fxml properties after opening the window, it gets done here. 
-    @FXML
-    public void initialize(){
-        System.out.println("Dashboad is loading stats...");
 
-        try {
-            DbAccess db = new DbAccess();
-            List<Map<String, Object>> totColList = db.runQuery("SELECT COUNT(*) FROM collections");
+    @FXML
+public void initialize() {
+    try {
+        // --- 1) Set welcome name safely ---
+        String firstName = CurrentUser.getFirstName();
+        if (admindashwelcome_value != null) {
+            if (firstName != null && !firstName.isEmpty()) {
+                admindashwelcome_value.setText(firstName);
+            } else {
+                admindashwelcome_value.setText("");
+            }
+        }
+
+        // --- 2) Load stats safely ---
+        System.out.println("Dashboard is loading stats...");
+
+        DbAccess db = new DbAccess();
+
+        // total collections
+        if (admindashtotcal_value != null) {
+            List<Map<String, Object>> totColList =
+                    db.runQuery("SELECT COUNT(*) FROM collections");
             Map<String, Object> totColMap = totColList.getFirst();
             Object totCol = totColMap.get("COUNT(*)");
-
-            System.out.println(totCol.toString());
             admindashtotcal_value.setText(totCol.toString());
+        }
 
-            List<Map<String, Object>> totItemList = db.runQuery("SELECT COUNT(*) FROM items");
+        // total items
+        if (admindashtotitem_value != null) {
+            List<Map<String, Object>> totItemList =
+                    db.runQuery("SELECT COUNT(*) FROM items");
             Map<String, Object> totItemMap = totItemList.getFirst();
             Object totItem = totItemMap.get("COUNT(*)");
-
             admindashtotitem_value.setText(totItem.toString());
+        }
 
-            // Run sql query to get the quantity and collection of all items
-            // Create empty dictionary
-            // use collection as key and amount of items as data
-            // go through sql response, get the collection, check if collection is key in new dict, if not create a new entry, if so add to the running total
-            // Once done, go through new dict and add up data and get an average
+        // average items per collection
+        if (admindashavgitem_value != null) {
             HashMap<String, Integer> collectionCounts = new HashMap<>();
-            List<Map<String, Object>> itemsResponse = db.runQuery("select quantity, collection from items");
-            String nullResponse = "0";
 
-            if (itemsResponse == null) {
-                admindashavgitem_value.setText(nullResponse);
+            List<Map<String, Object>> itemsResponse =
+                    db.runQuery("SELECT quantity, collection FROM items");
+
+            for (Map<String, Object> item : itemsResponse) {
+                Integer itemQuantity = (Integer) item.get("quantity");
+                String collectionName = item.get("collection").toString();
+
+                collectionCounts.merge(collectionName, itemQuantity, Integer::sum);
             }
-            else {
-                for (Map<String, Object> item : itemsResponse) {
-                    Integer itemQuantity = (Integer) item.get("quantity");
-    
-                    if (!collectionCounts.containsKey(item.get("collection").toString())) {
-                        collectionCounts.put(item.get("collection").toString(), itemQuantity);
-                    }
-                    else {
-                        Integer loadedCount = collectionCounts.get(item.get("collection").toString());
-                        loadedCount += itemQuantity;
-    
-                        collectionCounts.put(item.get("collection").toString(), loadedCount);
-                    }
-                }
-    
-                System.out.println(collectionCounts.toString());
-                
-                Integer totalItems = 0;
+
+            if (!collectionCounts.isEmpty()) {
+                int totalItems = 0;
                 for (Integer i : collectionCounts.values()) {
                     totalItems += i;
                 }
-    
-                Integer avgItem = totalItems / collectionCounts.size();
-                System.out.println(avgItem.toString());
-                admindashavgitem_value.setText(avgItem.toString());
+                int avgItem = totalItems / collectionCounts.size();
+                admindashavgitem_value.setText(Integer.toString(avgItem));
+            } else {
+                admindashavgitem_value.setText("0");
             }
-
-        } catch (SQLException e) {
-            e.getMessage();
         }
-        /*Process should work as follows:
-        1.) Create DB query for the following values: 
-            a.) Total number of collections 
-                i.) Just a count on the number of values in the collection table (call it value totCol)
-            b.) Total number of items
-                i.) Just a count on the number of values in the item table (call it value totItem)
-            c.) Average number of items in collection
-                i.) This might be a bit tough - lets come back this or replace with something else
-        2.) Populate these values
-        
-        admindashtotcal_value.setText(totCol);
-        admindashtotitem_value.setText(totItem);
-        admindashavgitem_value.setText(avgItem);        
-                
-                */
-                
+
+    } catch (Exception e) {
+        System.out.println("Error in AdminDashController.initialize: " + e);
+        e.printStackTrace();
+        // We swallow the exception so the FXML still loads instead of crashing.
     }
+}
+    
+                
+    
 }
