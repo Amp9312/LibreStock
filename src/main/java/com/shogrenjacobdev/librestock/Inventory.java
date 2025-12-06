@@ -59,10 +59,15 @@ public class Inventory {
 
         try {
             List<Map<String, Object>> result = db.runQuery("SELECT * FROM items WHERE name = ?", name);
-            System.out.println("Query returned rows: " + result.size());
+            //System.out.println("Query returned rows: " + result.size());
 
+            if (result.isEmpty()) {
+                Testing.TestFail("getItemByName", "SQL Query returned null");
+                return null;
+            }
             if (!result.isEmpty()) {
-                System.out.println("Columns: " + result.get(0).keySet());
+                Testing.TestPass("getItemByName", "Non-null result returned");
+                //System.out.println("Columns: " + result.get(0).keySet());
             }
 
             Map<String, Object> item = result.getFirst();
@@ -74,9 +79,11 @@ public class Inventory {
             collection = (int) item.get("collection");
             description = (String) item.get("description");
 
+            Testing.TestPass("getItemByName", "Item constructed successfully and returned");
             return new Item(itemId, sku, itemName, quantity, collection, description);
         }
         catch (SQLException e) {
+            Testing.TestFail("getItemByName", "SQL Exception in getItemByName");
             System.err.println("SQLException in Inventory.getItemByName: " + e.getMessage());
             return null;
         }
@@ -85,6 +92,17 @@ public class Inventory {
     public List<Item> getItemsByName(String name) {
         try {
             List<Map<String, Object>> result = db.runQuery("SELECT * FROM items WHERE name = ?", name);
+            
+
+            if (result.isEmpty()) {
+                Testing.TestFail("getItemsByName", "SQL Query returned null");
+                return null;
+            }
+            if (!result.isEmpty()) {
+                Testing.TestPass("getItemsByName", "Non-null result returned");
+                //System.out.println("Columns: " + result.get(0).keySet());
+            }
+
             List<Item> items = new ArrayList<>();
 
             for (int i = 0; i < result.size(); i++) {
@@ -99,9 +117,15 @@ public class Inventory {
                 items.add(new Item(id, sku, itemName, quantity, collection, description));
             }
 
+            if (items.isEmpty()) {
+                Testing.TestFail("getItemsByName", "List of items is empty");
+                return null;
+            }
+
             return items;
         }
         catch (SQLException e) {
+            Testing.TestFail("getItemsByName", "SQL Exception in getItemsByName");
             System.err.println("SQLException in Inventory.getItemsByName: " + e.getMessage());
             return null;
         }
@@ -118,6 +142,16 @@ public class Inventory {
         try {
             List<Map<String, Object>> result = db.runQuery("SELECT * FROM items WHERE sku = ?", sku);
 
+
+            if (result.isEmpty()) {
+                Testing.TestFail("getItemBySku", "Query returned null");
+                return null;
+            }
+
+            if (!result.isEmpty()) {
+                Testing.TestPass("getItemBySku", "Query found item with sku");
+            }
+
             Map<String, Object> item = result.getFirst();
 
             itemId = (int) item.get("itemId");
@@ -126,10 +160,15 @@ public class Inventory {
             quantity = (int) item.get("quantity");
             collection = (int) item.get("collection");
             description = (String) item.get("description");
+            
+            if (!item.isEmpty()) {
+                Testing.TestPass("getItemBySku", "Item successfully generated");
+            }
 
             return new Item(itemId, itemSku, itemName, quantity, collection, description);
         }
         catch (SQLException e) {
+            Testing.TestFail("getItemBySku", "SQL Exception in getItemBySku");
             System.err.println("SQLException in Inventory.getItemByName: " + e.getMessage());
             return null;
         }
@@ -191,9 +230,11 @@ public class Inventory {
     public void deleteItemById(int id) {
         try {
             db.runQuery("DELETE FROM items WHERE id = ?", id);
-            System.out.println("Deleted item with id " + id);
+            //System.out.println("Deleted item with id " + id);
+            Testing.TestPass("deleteItemById", "item with given ID successfully deleted");
         }
         catch (SQLException e) {
+            Testing.TestFail("deleteItemById", "Failed to delete item with given ID");
             System.err.println("SQLException in Inventory.deleteItemById: " + e.getMessage());
         }
     }
@@ -201,9 +242,10 @@ public class Inventory {
     public void deleteItemBySku(String sku) {
         try {
             db.runQuery("DELETE FROM items WHERE sku = ?", sku);
-            System.out.println("Deleted item with sku " + sku);
+            Testing.TestPass("deleteItemBySku", "item with given sku successfully deleted");
         }
         catch (SQLException e) {
+            Testing.TestFail("deleteItemBySku", "Failed to delete item with given sku");
             System.err.println("SQLException in Inventory.deleteItemBySku: " + e.getMessage());
         }
     }
@@ -211,9 +253,10 @@ public class Inventory {
     public void deleteItemsByName(String name) {
         try {
             db.runQuery("DELETE FROM items WHERE name = ?", name);
-            System.out.println("Deleted ALL items with name " + name);
+            Testing.TestPass("deleteItemByName", "item with given name successfully deleted");
         }
         catch (SQLException e) {
+            Testing.TestFail("deleteItemByName", "Failed to delete item with given name");
             System.err.println("SQLException in Inventory.deleteItemByName: " + e.getMessage());
         }
     }
@@ -221,9 +264,10 @@ public class Inventory {
     public void deleteItemsByCollection(int collection) {
         try {
             db.runQuery("DELETE FROM items WHERE collection = ?", collection);
-            System.out.println("Deleted ALL items in collection " + collection);
+            Testing.TestPass("deleteItemsByCollection", "Deleted all items from collection " + collection);
         }
         catch (SQLException e) {
+            Testing.TestFail("deleteItemsByCollection", "Failed to delete all items from collection " + collection);
             System.err.println("SQLException in Inventory.deleteItemByCollection: " + e.getMessage());
         }
     }
@@ -232,9 +276,10 @@ public class Inventory {
         try {
             String sql = "INSERT INTO items VALUES (?, ?, ?, ?, ?, ?)";
             db.runQuery(sql, itemId, sku, name, quantity, collection, description);
-            System.out.println("Created item with name " + name);
+            Testing.TestPass("createItem", "Item successfully created");
         }
         catch (SQLException e) {
+            Testing.TestFail("createItem", "SQL Exception in createItem");
             System.err.println("SQLException in Inventory.createItem: " + e.getMessage());
         }
     }
@@ -242,16 +287,25 @@ public class Inventory {
     public Collection getCollectionById(int collId) {
         try {
             List<Map<String, Object>> result = db.runQuery("SELECT * FROM collections WHERE id = ?", collId);
+
+            if (result.isEmpty()) {
+                Testing.TestFail("getCollectionById", "Collection with Id not found");
+                return null;
+            }
+
             Map<String, Object> coll = result.getFirst();
+            Testing.TestPass("getCollectionById", "Collection successfully found");
 
             int collectionId = (int) coll.get("id");
             String collectionName = (String) coll.get("name");
             String type = (String) coll.get("type");
             int size = (int) coll.get("size");
 
+            Testing.TestPass("getCollectionById", "Collection successfully generated");
             return new Collection(collectionId, collectionName, type, size);
         }
         catch (SQLException e) {
+            Testing.TestFail("getCollectionById", "SQL Exception raised");
             System.err.println("SQLException in Inventory.getCollectionById: " + e.getMessage());
             return null;
         }
@@ -260,6 +314,12 @@ public class Inventory {
     public List<Collection> getCollectionsByName(String name) {
         try {
             List<Map<String, Object>> result = db.runQuery("SELECT * FROM collections WHERE name = ?", name);
+
+            if(result.isEmpty()) {
+                Testing.TestFail("getCollectionsByName", "No collection with given name exists");
+                return null;
+            }
+
             List<Collection> collections = new ArrayList<>();
 
             for (int i = 0; i < result.size(); i++) {
@@ -272,9 +332,11 @@ public class Inventory {
                 collections.add(new Collection(id, collName, type, size));
             }
 
+            Testing.TestPass("getCollectionsByName", "List of collections successfully generated");
             return collections;
         }
         catch (SQLException e) {
+            Testing.TestFail("getCollectionsByName", "SQL Exception Raised");
             System.err.println("SQLException in Inventory.getCollectionsByName: " + e.getMessage());
             return null;
         }
@@ -284,9 +346,10 @@ public class Inventory {
         try {
             String sql = "INSERT INTO collections VALUES (?, ?, ?, ?)";
             db.runQuery(sql, collectionId, name, type, size);
-            System.out.println("Created collection with name " + name);
+            Testing.TestPass("createCollection", "Collection " + name + "successfully created");
         }
         catch (SQLException e) {
+            Testing.TestFail("createCollection", "SQL Exception raised");
             System.err.println("SQLException in Inventory.createCollection: " + e.getMessage());
         }
     }
@@ -294,10 +357,11 @@ public class Inventory {
     public void deleteCollectionById(int collectionId) {
         try {
             db.runQuery("DELETE FROM collections WHERE id = ?", collectionId);
-            System.out.println("Deleted collection with id " + collectionId);
+            Testing.TestPass("deleteCollectionById", "Collection with given id deleted successfully");
         }
         catch (SQLException e) {
             System.err.println("SQLException in Inventory.deleteCollectionById: " + e.getMessage());
+            Testing.TestFail("deleteCollectionById", "SQL Exception raised");
         }
     }
 
@@ -310,10 +374,13 @@ public class Inventory {
         if (!path.exists()) {
             path.createNewFile();
 
+            Testing.TestPass("ExportTable", "New file successfully created");
+
             try {
                 List<Map<String, Object>> results = db.runQuery("SELECT * FROM " +  table);
 
                 if (results == null) {
+                    Testing.TestFail("ExportTable", "Query returned null");
                     return;
                 }
 
@@ -329,12 +396,13 @@ public class Inventory {
                 }
                 csv.append("\n");
 
-                System.out.println(headersList.toString());
-                System.out.println(results.size());
+                if (!headers.isEmpty()) {
+                    Testing.TestPass("ExportTable", "Table headers successfully exported");
+                }
 
                 for (int i = 0; i < results.size(); i++) {
                     for (int j = 0; j < headersList.size(); j++) {
-                        System.out.println(results.get(i).get(headersList.get(j)));
+                        //System.out.println(results.get(i).get(headersList.get(j)));
                         Object cell = results.get(i).get(headersList.get(j));
 
                         if (cell == null) {
@@ -347,13 +415,16 @@ public class Inventory {
                         csv.append(",");
                     }
                     csv.append("\n");
-                    System.out.println("---------------");
+                    //System.out.println("---------------");
                 }
 
                 csv.flush();
                 csv.close();
+
+                Testing.TestPass("ExportTable", "Table data successfully exported");
             }
             catch (SQLException e) {
+                Testing.TestFail("ExportTable", "SQL Exception Raised");
                 System.err.println("SQLException in Inventory.ExportTable: " + e.getMessage());
             }
         }
@@ -364,12 +435,16 @@ public class Inventory {
         String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'users'";
         try {
             List<Map<String, Object>> tables = db.runQuery(sql);
-            System.out.println(tables.toString());
+            
+            if (!tables.isEmpty()) {
+                Testing.TestPass("ExportInventory", "Tables to export found");
+            }
 
             File outputFolder = new File("./" + fileName);
 
             if (!outputFolder.exists()) {
                 outputFolder.mkdir();
+                Testing.TestPass("ExportInventory", "Export folder generated");
             }
 
             for (Map<String, Object> table : tables) {
@@ -381,9 +456,11 @@ public class Inventory {
                 catch (IOException e) {
                     e.printStackTrace();
                 }
+                Testing.TestPass("ExportInventory", "Table " + tableName + " successfully exported");
             }
         }
         catch (SQLException e) {
+            Testing.TestFail("ExportInventory", "SQL Exception Raised");
             System.err.println("SQLException in Inventory.ExportInventory: " + e.getMessage());
         }
     }

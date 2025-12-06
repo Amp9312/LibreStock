@@ -65,11 +65,14 @@ public List<Map<String, Object>> runQuery(String query, Object... params) throws
                         result.add(row);
                     }
                 }
+                
+                Testing.TestPass("DbAccess.runQuery", "Select statement successful");
 
                 return result.isEmpty() ? null : result;
             }
 
             // Non-SELECT statements (INSERT/UPDATE/DELETE) – caller doesn’t expect rows
+            Testing.TestPass("DbAccess.runQuery", "Non-Select Statement successful");
             return null;
         }
     }
@@ -109,13 +112,16 @@ public List<Map<String, Object>> runQuery(String query, Object... params) throws
         } else if (table.equals("users")) {
             sql = "SELECT * FROM users WHERE userId = ?";
         } else {
+            Testing.TestFail("DbAccess.getRowById", "Requested Table DNE");
             throw new IllegalArgumentException("Invalid table: " + table);
         }
 
         try {
+            Testing.TestPass("DbAccess.getRowById", "Row from requested table retrieved");
             List<Map<String, Object>> result = runQuery(sql, id);
             return result.getFirst();
         } catch (SQLException e) {
+            Testing.TestFail("DbAccess.getRowById", "Sql Exception caught");
             System.out.println("SQLException in DBAccess.getRowById: " + e.getMessage());
         }
 
@@ -133,11 +139,14 @@ public List<Map<String, Object>> runQuery(String query, Object... params) throws
         try {
             List<Map<String, Object>> rows = runQuery(sql, username, password);
             if (rows != null && !rows.isEmpty()) {
+                Testing.TestPass("DbAccess.findUserByCredentials", "User found with given credentials");
                 return rows.get(0);
             }
         } catch (SQLException e) {
             System.out.println("SQLException in DbAccess.findUserByCredentials: " + e.getMessage());
         }
+
+        Testing.TestFail("DbAccess.findUserByCredentials", "User not found with given creds");
         return null;
     }
 
@@ -148,9 +157,11 @@ public List<Map<String, Object>> runQuery(String query, Object... params) throws
             List<Map<String, Object>> rows = runQuery(sql);
             if (rows != null && !rows.isEmpty()) {
                 Object val = rows.get(0).get("nextId");
+                Testing.TestPass("DbAccess.getNextUserId", "Next User id found");
                 return ((Number) val).intValue();
             }
         } catch (SQLException e) {
+            Testing.TestFail("DbAccess.getNextUserId", "Failed to get next id");
             System.out.println("SQLException in DbAccess.getNextUserId: " + e.getMessage());
         }
         return 1;
@@ -170,8 +181,10 @@ public List<Map<String, Object>> runQuery(String query, Object... params) throws
 
         try {
             runQuery(sql, userId, accountId, firstName, lastName, role, username, password);
+            Testing.TestPass("DbAccess.insertUser", "New user inserted into DB successfully");
             return true;
         } catch (SQLException e) {
+            Testing.TestFail("DbAccess.insertUser", "SQL Exception while inserting new user");
             System.out.println("SQLException in DbAccess.insertUser: " + e.getMessage());
             return false;
         }
