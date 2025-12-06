@@ -50,6 +50,83 @@ public class EditCollectionController {
         String enteredEditCollectionType = editcollectioncollectiontype_textfield.getText();
         String enteredEditCollectionSize = editcollectionmaxsize_textfield.getText();
 
+        if (enteredEditCollectionID == null || enteredEditCollectionID.trim().isEmpty()) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("LibreStock");
+            a.setHeaderText(null);
+            a.setContentText("Please enter a collection ID to update.");
+            a.showAndWait();
+            return;
+        }
+
+        int collId;
+        try {
+            collId = Integer.parseInt(enteredEditCollectionID.trim());
+        } catch (NumberFormatException nfe) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("LibreStock");
+            a.setHeaderText(null);
+            a.setContentText("Collection ID must be a whole number.");
+            a.showAndWait();
+            return;
+        }
+
+        if (enteredEditCollectionName == null) enteredEditCollectionName = "";
+        if (enteredEditCollectionType == null) enteredEditCollectionType = "";
+        if (enteredEditCollectionSize == null) enteredEditCollectionSize = "";
+
+        // validate size (allow blank -> 0)
+        int sizeVal = 0;
+        String sizeTrim = enteredEditCollectionSize.trim();
+        if (!sizeTrim.isEmpty()) {
+            try {
+                sizeVal = Integer.parseInt(sizeTrim);
+            } catch (NumberFormatException nfe) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("LibreStock");
+                a.setHeaderText(null);
+                a.setContentText("Max size must be a whole number.");
+                a.showAndWait();
+                return;
+            }
+        }
+
+        try {
+            DbAccess db = new DbAccess();
+
+            // verify collection exists
+            java.util.List<java.util.Map<String, Object>> rows = db.runQuery("SELECT * FROM collections WHERE id = ?", collId);
+            if (rows == null || rows.isEmpty()) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("LibreStock");
+                a.setHeaderText(null);
+                a.setContentText("No collection found with that ID.");
+                a.showAndWait();
+                return;
+            }
+
+            // perform update
+            db.runQuery("UPDATE collections SET name = ?, type = ?, size = ? WHERE id = ?",
+                        enteredEditCollectionName.trim(), enteredEditCollectionType.trim(), sizeVal, collId);
+
+            Alert info = new Alert(Alert.AlertType.INFORMATION);
+            info.setTitle("LibreStock");
+            info.setHeaderText(null);
+            info.setContentText("Collection updated successfully.");
+            info.showAndWait();
+
+            // allow new searches/edits
+            editcollectioncollectionID_textfield.setEditable(true);
+
+        } catch (java.sql.SQLException sqle) {
+            System.err.println("SQLException in EditCollectionController.update: " + sqle.getMessage());
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("LibreStock");
+            a.setHeaderText(null);
+            a.setContentText("Database error: " + sqle.getMessage());
+            a.showAndWait();
+        }
+
     }
 
     @FXML
