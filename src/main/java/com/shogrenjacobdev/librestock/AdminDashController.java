@@ -4,6 +4,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.layout.BorderPane;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +19,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import javafx.scene.control.Alert;
 
 public class AdminDashController {
     Stage stage;
@@ -36,6 +47,203 @@ public class AdminDashController {
     @FXML private Label admindashtotcal_value;
     @FXML private Label admindashtotitem_value;
     @FXML private Label admindashavgitem_value;
+    @FXML private MenuItem reportItemsAZMenu;
+    @FXML private MenuItem reportCollectionsIdMenu;
+    @FXML private MenuItem reportItemsByQtyMenu;
+
+
+    private void showInfo(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Report");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Report Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
+     @FXML
+private void onReportItemsAZ() {
+    try {
+        DbAccess db = new DbAccess();
+        String sql = "SELECT itemId, name, quantity, collection, sku, description " +
+                     "FROM items ORDER BY name COLLATE NOCASE";
+        List<Map<String, Object>> rows = db.runQuery(sql);
+
+        if (rows == null || rows.isEmpty()) {
+            showInfo("No items found in the database.");
+            return;
+        }
+
+        // -------------------------------
+        // 1) SHOW RESULTS INSIDE THE APP
+        // -------------------------------
+        // Convert rows to observable list
+        ObservableList<Map<String, Object>> data =
+                FXCollections.observableArrayList(rows);
+
+        // Create a TableView
+        TableView<Map<String, Object>> table = new TableView<>();
+        table.setItems(data);
+
+        // Define columns (DB column keys vs headers)
+        String[] columnKeys   = {"itemId", "name", "quantity", "collection", "sku", "description"};
+        String[] columnLabels = {"Item ID", "Name", "Quantity", "Collection", "SKU", "Description"};
+
+        for (int i = 0; i < columnKeys.length; i++) {
+            final String key = columnKeys[i];
+            TableColumn<Map<String, Object>, String> col =
+                    new TableColumn<>(columnLabels[i]);
+
+            col.setCellValueFactory(param -> {
+                Map<String, Object> row = param.getValue();
+                Object val = row.get(key);
+                return new SimpleStringProperty(
+                        val == null ? "" : val.toString()
+                );
+            });
+
+            col.setPrefWidth(120);
+            table.getColumns().add(col);
+        }
+
+        BorderPane root = new BorderPane(table);
+        Scene scene = new Scene(root, 800, 400);
+
+        Stage reportStage = new Stage();
+        reportStage.setTitle("All Items (A–Z)");
+        // optional: tie it to the admin window
+        Stage owner = (Stage) admindashlogout_button.getScene().getWindow();
+        reportStage.initOwner(owner);
+
+        reportStage.setScene(scene);
+        reportStage.show();
+
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        showError("Failed to generate A-Z items report: " + e.getMessage());
+    }
+}
+
+
+       @FXML
+private void onReportCollectionsIdRange() {
+    try {
+        DbAccess db = new DbAccess();
+        String sql = "SELECT id, name, type, size " +
+                     "FROM collections " +
+                     "WHERE id BETWEEN 1 AND 100 " +
+                     "ORDER BY id ASC";
+        List<Map<String, Object>> rows = db.runQuery(sql);
+
+        if (rows == null || rows.isEmpty()) {
+            showInfo("No collections found with ID between 1 and 100.");
+            return;
+        }
+
+        // 1) Show results inside the app
+        ObservableList<Map<String, Object>> data =
+                FXCollections.observableArrayList(rows);
+
+        TableView<Map<String, Object>> table = new TableView<>();
+        table.setItems(data);
+
+        String[] columnKeys   = {"id", "name", "type", "size"};
+        String[] columnLabels = {"ID", "Name", "Type", "Size"};
+
+        for (int i = 0; i < columnKeys.length; i++) {
+            final String key = columnKeys[i];
+            TableColumn<Map<String, Object>, String> col =
+                    new TableColumn<>(columnLabels[i]);
+
+            col.setCellValueFactory(param -> {
+                Map<String, Object> row = param.getValue();
+                Object val = row.get(key);
+                return new SimpleStringProperty(val == null ? "" : val.toString());
+            });
+
+            col.setPrefWidth(140);
+            table.getColumns().add(col);
+        }
+
+        BorderPane root = new BorderPane(table);
+        Scene scene = new Scene(root, 600, 400);
+
+        Stage reportStage = new Stage();
+        reportStage.setTitle("Collections (ID 1–100)");
+        Stage owner = (Stage) admindashlogout_button.getScene().getWindow();
+        reportStage.initOwner(owner);
+        reportStage.setScene(scene);
+        reportStage.show();
+
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        showError("Failed to generate collections report: " + e.getMessage());
+    }
+}
+
+       @FXML
+private void onReportItemsByQuantity() {
+    try {
+        DbAccess db = new DbAccess();
+        String sql = "SELECT itemId, name, quantity, collection, sku, description " +
+                     "FROM items ORDER BY quantity DESC";
+        List<Map<String, Object>> rows = db.runQuery(sql);
+
+        if (rows == null || rows.isEmpty()) {
+            showInfo("No items found in the database.");
+            return;
+        }
+
+        // 1) Show results in a table
+        ObservableList<Map<String, Object>> data =
+                FXCollections.observableArrayList(rows);
+
+        TableView<Map<String, Object>> table = new TableView<>();
+        table.setItems(data);
+
+        String[] columnKeys   = {"itemId", "name", "quantity", "collection", "sku", "description"};
+        String[] columnLabels = {"Item ID", "Name", "Quantity", "Collection", "SKU", "Description"};
+
+        for (int i = 0; i < columnKeys.length; i++) {
+            final String key = columnKeys[i];
+            TableColumn<Map<String, Object>, String> col =
+                    new TableColumn<>(columnLabels[i]);
+
+            col.setCellValueFactory(param -> {
+                Map<String, Object> row = param.getValue();
+                Object val = row.get(key);
+                return new SimpleStringProperty(val == null ? "" : val.toString());
+            });
+
+            col.setPrefWidth(120);
+            table.getColumns().add(col);
+        }
+
+        BorderPane root = new BorderPane(table);
+        Scene scene = new Scene(root, 800, 400);
+
+        Stage reportStage = new Stage();
+        reportStage.setTitle("Items by Quantity (High → Low)");
+        Stage owner = (Stage) admindashlogout_button.getScene().getWindow();
+        reportStage.initOwner(owner);
+        reportStage.setScene(scene);
+        reportStage.show();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        showError("Failed to generate quantity-sorted items report: " + e.getMessage());
+    }
+}
 
 
     @FXML

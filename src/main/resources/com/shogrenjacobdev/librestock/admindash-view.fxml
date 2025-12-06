@@ -54,16 +54,28 @@
               </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Generate Report">
-          <items>
-            <MenuItem mnemonicParsing="false" text="All Items, A-Z" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="All Collections, ID 1-100" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="All Items, Sorted by Quantity" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
-          </items>
-        </Menu>
+    <items>
+         <MenuItem fx:id="reportItemsAZMenu"
+                  mnemonicParsing="false"
+                  text="All Items, A-Z"
+                  onAction="#onReportItemsAZ"/>
+
+                  <SeparatorMenuItem mnemonicParsing="false"/>
+
+                  <MenuItem fx:id="reportCollectionsIdMenu"
+                     mnemonicParsing="false"
+                     text="All Collections, ID 1-100"
+                     onAction="#onReportCollectionsIdRange"/>
+
+                  <SeparatorMenuItem mnemonicParsing="false"/>
+
+                  <MenuItem fx:id="reportItemsByQtyMenu"
+                     mnemonicParsing="false"
+                     text="All Items, Sorted by Quantity"
+                     onAction="#onReportItemsByQuantity"/>
+               </items>
+         </Menu>
+
             <Menu mnemonicParsing="false" text="Item Options">
                <items>
                   <MenuItem fx:id="adminnewitem_menu" mnemonicParsing="false" onAction="#adminNewItemMenuClick" text="New Item" />
