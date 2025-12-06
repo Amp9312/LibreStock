@@ -16,7 +16,7 @@ public class EditItemController {
     Stage stage;
     @FXML private Button edititemreturn_button;
     @FXML private Button edititemsubmit_button;
-    @FXML private Button edititemsearch_button; // saved for later even if not used currently
+    @FXML private Button edititemsearch_button;
     @FXML private MenuItem edititemquit_menu;
     @FXML private MenuItem edititemaboutlibrestock_menu;
     @FXML private MenuItem edititemnew_menu;
@@ -48,35 +48,90 @@ public class EditItemController {
     }
 
     @FXML
-    private void ititemSubmitButtonClick() throws IOException{
+    private void edititemSubmitButtonClick() throws IOException{
         System.out.println("submitting data fr fr");
-        /*Process is as follows: 
-        1. Capture data from collection, item name, quantity, and sku
-        1.5) Check if user only entered item name - if so, then run lookup method instead
-        2. Find database entry using itemID, make sure they match
-        3. Perform update query using data pulled from fields  */
-
+        // Capture entered values
         String enteredItemID = edititemitemID_textfield.getText();
         String enteredCollection = edititemcollection_textfield.getText();
         String enteredItemName = edititemitemname_textfield.getText();
         String enteredQuantity = edititemquantity_textfield.getText();
         String enteredSKU = edititemsku_textfield.getText();
 
-        /*
-        Check if looking up or submitting changes
-        if(adminedititemitemID_textfield.isEmpty()){
-            if(!adminedititemitemname_textfield.isEmpty()){
-                String itemIDFromDB = getItemID(enteredItemName);
-                adminedititemitemID_textfield.setText(itemIDFromDB);
-                }}
-        else{
-        
-         TODO: Look up in DB, match itemID values
+        if (enteredItemID == null || enteredItemID.trim().isEmpty()) {
+            showMessage("To update an item, please provide its itemID.");
+            return;
+        }
 
-         TODO: If matched, perform update query on item DB using entered values above
-        
-         showMessage("Query Matched! Changes were successful");
-         newAdminEditItemMenuClick();*/
+        try {
+            DbAccess db = new DbAccess();
+
+            int itemId;
+            try {
+                itemId = Integer.parseInt(enteredItemID.trim());
+            } catch (NumberFormatException nfe) {
+                showMessage("itemID must be a whole number.");
+                return;
+            }
+
+            java.util.List<java.util.Map<String, Object>> rows = db.runQuery("SELECT * FROM items WHERE itemId = ?", itemId);
+            if (rows == null || rows.isEmpty()) {
+                showMessage("No item found with that itemID.");
+                return;
+            }
+
+            java.util.Map<String, Object> current = rows.get(0);
+
+            String newSku = (enteredSKU == null || enteredSKU.trim().isEmpty()) ? (current.get("sku") == null ? "" : current.get("sku").toString()) : enteredSKU.trim();
+            String newName = (enteredItemName == null || enteredItemName.trim().isEmpty()) ? (current.get("name") == null ? "" : current.get("name").toString()) : enteredItemName.trim();
+
+            int newQuantity;
+            if (enteredQuantity == null || enteredQuantity.trim().isEmpty()) {
+                Object q = current.get("quantity");
+                newQuantity = q == null ? 0 : ((Number) q).intValue();
+            } else {
+                try {
+                    newQuantity = Integer.parseInt(enteredQuantity.trim());
+                } catch (NumberFormatException nfe) {
+                    showMessage("Quantity must be a whole number.");
+                    return;
+                }
+            }
+
+            int newCollection;
+            if (enteredCollection == null || enteredCollection.trim().isEmpty()) {
+                Object c = current.get("collection");
+                newCollection = c == null ? 0 : ((Number) c).intValue();
+            } else {
+                try {
+                    newCollection = Integer.parseInt(enteredCollection.trim());
+                } catch (NumberFormatException nfe) {
+                    showMessage("Collection must be a whole number (collection id).");
+                    return;
+                }
+            }
+
+            String newDescription = current.get("description") == null ? "" : current.get("description").toString();
+
+            db.runQuery("UPDATE items SET sku = ?, name = ?, quantity = ?, collection = ?, description = ? WHERE itemId = ?",
+                    newSku, newName, newQuantity, newCollection, newDescription, itemId);
+
+            Alert info = new Alert(Alert.AlertType.INFORMATION);
+            info.setTitle("LibreStock");
+            info.setHeaderText(null);
+            info.setContentText("Item updated successfully.");
+            info.showAndWait();
+
+            // Reset form state
+            edititemitemID_textfield.setEditable(true);
+            edititemcollection_textfield.setEditable(false);
+            edititemitemname_textfield.setEditable(false);
+            edititemquantity_textfield.setEditable(false);
+            edititemsku_textfield.setEditable(false);
+
+        } catch (java.sql.SQLException e) {
+            System.err.println("SQLException in EditItemController.update: " + e.getMessage());
+            showMessage("Database error: " + e.getMessage());
+        }
     }
 
         @FXML
@@ -88,37 +143,75 @@ public class EditItemController {
         3.) If match is found, disable itemID field, and enable fields and populate them with data from that database entry 
         3.5) If match is not found, throw error state
 */
-        String enteredItemID = edititemitemID_textfield.getText();
-
-        // Insert cool database checking logic here where the ID is matched against the items in the DB
-
-        // TODO: If itemID match is found, populate data in fields with item data from db entry (note the methods listed here arent made yet)
-        /* String itemCollection = getItemCollectionFromDB();
-           String itemName = getItemCollectionFromDB();
-           String itemQuantity = getItemCollectionFromDB();
-           String itemSKU = getItemCollectionFromDB();
-
-        Will need to turn off itemID field to prevent insertion anomalies in the DB
-
-        if(itemID match found) {
-        edititemitemID_textfield.setEditable(false);
+        try {
+            boolean found = checkForSearch();
+            if (!found) {
+                // This should not happen because checkForSearch throws when not found,
+                showMessage("No matching item found.");
+            }
+        } catch (java.sql.SQLException sqle) {
+            System.err.println("SQLException in EditItemController.search: " + sqle.getMessage());
+            showMessage("Database error: " + sqle.getMessage());
+        } catch (IllegalArgumentException iae) {
+            showMessage(iae.getMessage());
         }
-        
-        This is where it checks if the textfields are currently editable.   
-        if(!edititemcollection_textfield.isEditable()){
-           edititemcollection_textfield.setEditable(true);
-           edititemitemname_textfield.setEditable(true);
-           edititemquantity_textfield.setEditable(true);
-           edititemsku_textfield.setEditable(true);
-           }
-        
+    }
 
-        Here is where the textfield values get set - this should just work as is   
-        edititemcollection_textfield.setText(itemcollection);
-        edititemitemname_textfield.setText(itemName);
-        edititemquantity_textfield.setText(itemQuantity);
-        edititemsku_textfield.setText(itemSKU);
-        */
+    /*
+    Helper: performs a lookup in the items table using the values currently
+    present in the `edititemitemID_textfield` or `edititemitemname_textfield`.
+    If a matching item is found the UI fields are populated and the method
+    returns true. If no match is found an IllegalArgumentException is thrown.
+    */
+    private boolean checkForSearch() throws java.sql.SQLException {
+        String enteredItemID = edititemitemID_textfield.getText();
+        String enteredItemName = edititemitemname_textfield.getText();
+
+        if (enteredItemID != null) enteredItemID = enteredItemID.trim();
+        if (enteredItemName != null) enteredItemName = enteredItemName.trim();
+
+        DbAccess db = new DbAccess();
+
+        java.util.List<java.util.Map<String, Object>> rows = null;
+
+        if (enteredItemID != null && !enteredItemID.isEmpty()) {
+            try {
+                int itemId = Integer.parseInt(enteredItemID);
+                rows = db.runQuery("SELECT * FROM items WHERE itemId = ?", itemId);
+            } catch (NumberFormatException nfe) {
+                throw new IllegalArgumentException("itemID must be a whole number.");
+            }
+        }
+
+        if ((rows == null || rows.isEmpty()) && enteredItemName != null && !enteredItemName.isEmpty()) {
+            rows = db.runQuery("SELECT * FROM items WHERE name = ?", enteredItemName);
+        }
+
+        if (rows != null && !rows.isEmpty()) {
+            java.util.Map<String, Object> item = rows.get(0);
+
+            Object idVal = item.get("itemId");
+            Object collVal = item.get("collection");
+            Object qtyVal = item.get("quantity");
+            Object skuVal = item.get("sku");
+
+            edititemitemID_textfield.setText(idVal == null ? "" : idVal.toString());
+            edititemcollection_textfield.setText(collVal == null ? "" : collVal.toString());
+            edititemitemname_textfield.setText(item.get("name") == null ? "" : item.get("name").toString());
+            edititemquantity_textfield.setText(qtyVal == null ? "" : qtyVal.toString());
+            edititemsku_textfield.setText(skuVal == null ? "" : skuVal.toString());
+
+            // set editability so user can edit the returned data
+            edititemitemID_textfield.setEditable(false);
+            edititemcollection_textfield.setEditable(true);
+            edititemitemname_textfield.setEditable(true);
+            edititemquantity_textfield.setEditable(true);
+            edititemsku_textfield.setEditable(true);
+
+            return true;
+        }
+
+        throw new IllegalArgumentException("No matching item in the database.");
     }
 
         @FXML

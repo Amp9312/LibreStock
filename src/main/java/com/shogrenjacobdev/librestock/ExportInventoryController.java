@@ -18,7 +18,7 @@ import java.util.Map;
 public class ExportInventoryController {
     Stage stage;
     @FXML private Button exportinventoryreturn_button;
-    @FXML private Button exportinventorysubmit_button; // saved for later even if not used currently
+    @FXML private Button exportinventorysubmit_button;
     @FXML private MenuItem exportinventoryquit_menu;
     @FXML private MenuItem exportinventoryaboutlibrestock_menu;
     @FXML private TextField exportinventoryfilename_textfield;

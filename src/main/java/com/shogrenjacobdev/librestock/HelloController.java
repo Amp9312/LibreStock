@@ -9,21 +9,24 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
 import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.Alert;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.List;
 
 import java.io.IOException;
 
 public class HelloController {
     Stage stage;
     @FXML private Button login_button;
+    @FXML private Button loginfts_button;
     @FXML private MenuItem loginquit_menu;
     @FXML private MenuItem loginAboutLibre_menu;
-
-
+    
+    
+    @FXML private PasswordField loginpassword_textfield;
     @FXML private TextField loginusername_textfield;
-    @FXML private TextField loginpassword_textfield;
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -109,6 +112,30 @@ public class HelloController {
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    public void initialize() {
+        // Check number of users in DB; if any users exist, disable the first-time-setup button.
+        try {
+            DbAccess db = new DbAccess();
+            List<Map<String, Object>> rows = db.runQuery("SELECT COUNT(*) AS cnt FROM users");
+            int count = 0;
+            if (rows != null && !rows.isEmpty()) {
+                Object val = rows.get(0).get("cnt");
+                if (val instanceof Number) {
+                    count = ((Number) val).intValue();
+                } else if (val != null) {
+                    try { count = Integer.parseInt(val.toString()); } catch (NumberFormatException ignored) {}
+                }
+            }
+            // If there is at least one user, disable first-time setup button.
+            loginfts_button.setDisable(count > 0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // On DB error, be conservative and disable the first-time setup button.
+            loginfts_button.setDisable(true);
+        }
     }
 
     @FXML

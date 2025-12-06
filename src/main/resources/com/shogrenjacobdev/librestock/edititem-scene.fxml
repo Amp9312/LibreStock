@@ -152,7 +152,7 @@
       </HBox>
       <HBox alignment="TOP_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="510.0">
          <children>
-            <Button fx:id="edititemsubmit_button" mnemonicParsing="false" onAction="#ititemSubmitButtonClick" text="Submit">
+            <Button fx:id="edititemsubmit_button" mnemonicParsing="false" onAction="#edititemSubmitButtonClick" text="Submit">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>

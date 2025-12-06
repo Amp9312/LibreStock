@@ -29,11 +29,12 @@ public class AboutLibreStockController {
         stage.show();
     }
 
+    /* This doesnt do anything
     @FXML
     private void aboutLibreDocsButtonClick() throws IOException{
         System.out.println("submitting data fr fr");
-        /* put craaaaazy submit logic here later (some sort of update method for collections in the db) */
-    }
+        put craaaaazy submit logic here later (some sort of update method for collections in the db)
+    }*/
 
     @FXML
     public void quitAboutLibreMenuClick() throws IOException{

@@ -14,7 +14,8 @@ import java.io.IOException;
 public class EditCollectionController {
     Stage stage;
     @FXML private Button editcollectionreturn_button;
-    @FXML private Button editcollectionsubmit_button; // saved for later even if not used currently
+    @FXML private Button editcollectionsubmit_button;
+    @FXML private Button editcollectionsearch_button;
     @FXML private MenuItem editcollectionquit_menu;
     @FXML private MenuItem editcollectionaboutlibrestock_menu;
     @FXML private MenuItem editcollectionnew_menu;
@@ -41,8 +42,7 @@ public class EditCollectionController {
         System.out.println("submitting data fr fr");
         /*Process is as follows:
         1.) Capture data from the entered fields
-        1.5) Check if only Collection Name was entered - if so, perform a search for collection ID
-        2.) If not searching, perform a match inquiry based on entered CollectionID
+        2.) Perform a match inquiry based on entered CollectionID
         3.) If matched, formulate query to submit changes and notify user of success (if not - give error message) */
 
         String enteredEditCollectionID = editcollectioncollectionID_textfield.getText();
@@ -50,22 +50,74 @@ public class EditCollectionController {
         String enteredEditCollectionType = editcollectioncollectiontype_textfield.getText();
         String enteredEditCollectionSize = editcollectionmaxsize_textfield.getText();
 
-         /*
-        Check if looking up or submitting changes
-        if(editcollectioncollectionID_textfield.isEmpty()){
-            if(!editcollectioncollectionname_textfield.isEmpty()){
-                String collectionIDFromDB = getCollectionID(enteredEditCollectionName);
-                editcollectioncollectionID_textfield.setText(collectionIDFromDB);
-                }}
-        else{
-        
-         TODO: Look up in DB, match collection ID values
+    }
 
-         TODO: If matched, perform update query on collection DB using entered values above
-        
-         showMessage("Query Matched! Changes were successful");
-         newEditCollectionMenuClick();*/
+    @FXML
+    private void editcolsearchButtonClick() throws IOException{
+        System.out.println("searching collection data");
 
+        String enteredCollectionID = editcollectioncollectionID_textfield.getText();
+        if (enteredCollectionID == null) enteredCollectionID = "";
+        enteredCollectionID = enteredCollectionID.trim();
+
+        if (enteredCollectionID.isEmpty()) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("LibreStock");
+            a.setHeaderText(null);
+            a.setContentText("Please enter a collection ID to search.");
+            a.showAndWait();
+            return;
+        }
+
+        int collId;
+        try {
+            collId = Integer.parseInt(enteredCollectionID);
+        } catch (NumberFormatException nfe) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("LibreStock");
+            a.setHeaderText(null);
+            a.setContentText("Collection ID must be a whole number.");
+            a.showAndWait();
+            return;
+        }
+
+        try {
+            DbAccess db = new DbAccess();
+            java.util.List<java.util.Map<String, Object>> rows = db.runQuery("SELECT * FROM collections WHERE id = ?", collId);
+            if (rows == null || rows.isEmpty()) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("LibreStock");
+                a.setHeaderText(null);
+                a.setContentText("No collection found with that ID.");
+                a.showAndWait();
+                return;
+            }
+
+            java.util.Map<String, Object> coll = rows.get(0);
+            Object idVal = coll.get("id");
+            Object nameVal = coll.get("name");
+            Object typeVal = coll.get("type");
+            Object sizeVal = coll.get("size");
+
+            editcollectioncollectionID_textfield.setText(idVal == null ? "" : idVal.toString());
+            editcollectioncollectionname_textfield.setText(nameVal == null ? "" : nameVal.toString());
+            editcollectioncollectiontype_textfield.setText(typeVal == null ? "" : typeVal.toString());
+            editcollectionmaxsize_textfield.setText(sizeVal == null ? "" : sizeVal.toString());
+
+            // set editability: lock id, allow edits to other fields
+            editcollectioncollectionID_textfield.setEditable(false);
+            editcollectioncollectionname_textfield.setEditable(true);
+            editcollectioncollectiontype_textfield.setEditable(true);
+            editcollectionmaxsize_textfield.setEditable(true);
+
+        } catch (java.sql.SQLException sqle) {
+            System.err.println("SQLException in EditCollectionController.search: " + sqle.getMessage());
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("LibreStock");
+            a.setHeaderText(null);
+            a.setContentText("Database error: " + sqle.getMessage());
+            a.showAndWait();
+        }
     }
 
      @FXML
@@ -92,5 +144,7 @@ public class EditCollectionController {
         editcollectioncollectionname_textfield.clear();
         editcollectioncollectiontype_textfield.clear();
         editcollectionmaxsize_textfield.clear();
+
+        editcollectioncollectionID_textfield.setEditable(true);
     }
 }

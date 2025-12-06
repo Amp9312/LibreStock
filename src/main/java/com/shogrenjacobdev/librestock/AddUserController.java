@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class AddUserController {
     Stage stage;
     @FXML private Button adduserreturn_button;
-    @FXML private Button addusersubmit_button; // saved for later even if not used currently
+    @FXML private Button addusersubmit_button;
     @FXML private MenuItem adduserquit_menu;
     @FXML private MenuItem adduseraboutlibrestock_menu;
 

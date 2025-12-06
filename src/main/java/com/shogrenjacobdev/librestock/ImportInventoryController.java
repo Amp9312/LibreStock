@@ -17,7 +17,7 @@ import java.util.Map;
 public class ImportInventoryController {
     Stage stage;
     @FXML private Button importinventoryreturn_button;
-    @FXML private Button importtinventorysubmit_button; // saved for later even if not used currently
+    @FXML private Button importtinventorysubmit_button;
     @FXML private MenuItem importinventoryquit_menu;
     @FXML private MenuItem importinventoryaboutlibrestock_menu;
     @FXML private TextField importinventoryfilename_textfield;

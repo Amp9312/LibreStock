@@ -1,5 +1,5 @@
 // NOTE: THIS SCENE NEVER GETS USED (ONLY ADMINDELETEITEM). ONLY KEEPING IT HERE UNTIL I CAN CONFIRM I CAN DELETE WITHOUT BREAKING EVERYTHING - Anthony
-
+/*
 package com.shogrenjacobdev.librestock;
 
 import javafx.fxml.FXML;
@@ -41,7 +41,7 @@ public class DeleteItemController {
         @FXML
     private void delitemsubmitButtonClick() throws IOException{
         System.out.println("deleting for data fr fr");
-        /* put craaaaazy delete logic here later (some sort of deletion method for items in the db) */
+        /* put craaaaazy delete logic here later (some sort of deletion method for items in the db) 
     }
 
     @FXML
@@ -61,4 +61,4 @@ public class DeleteItemController {
         stage.setScene(scene);
         stage.show();
     }
-}
+}*/

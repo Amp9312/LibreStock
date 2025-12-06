@@ -14,7 +14,7 @@ import java.io.IOException;
 public class AddCollectionController {
     Stage stage;
     @FXML private Button addcollectionreturn_button;
-    @FXML private Button addcollectionsubmit_button; // saved for later even if not used currently
+    @FXML private Button addcollectionsubmit_button;
     @FXML private MenuItem addcollectionquit_menu;
     @FXML private MenuItem addcollectionaboutlibrestock_menu;
     @FXML private TextField addcollectioncollectionname_textfield;
@@ -60,12 +60,53 @@ public class AddCollectionController {
         String enteredCollectionType = addcollectioncollectiontype_textfield.getText();
         String enteredMaxSize = addcollectionmaxsize_textfield.getText();
 
-        // TODO: Formulate query based on input
+        if (enteredCollectionName == null || enteredCollectionName.trim().isEmpty()) {
+            showMessage("Please enter a name for the new collection.");
+            return;
+        }
 
-        // TODO: Create new entry in collections DB table
+        int maxSize = 0;
+        if (enteredMaxSize != null && !enteredMaxSize.trim().isEmpty()) {
+            try {
+                maxSize = Integer.parseInt(enteredMaxSize.trim());
+            } catch (NumberFormatException nfe) {
+                showMessage("Max size must be a whole number.");
+                return;
+            }
+        }
 
-        // showMessage("Collection Made! Press Enter to Continue");
-        // clearAddCollectionFields();
+        if (maxSize < 0) {
+            Alert err = new Alert(Alert.AlertType.ERROR);
+            err.setTitle("LibreStock Notification");
+            err.setHeaderText(null);
+            err.setContentText("Max size must be zero or a positive number.");
+            err.showAndWait();
+            return;
+        }
+
+        try {
+            DbAccess db = new DbAccess();
+            Inventory inv = new Inventory(db);
+
+            // Compute next available collection id
+            java.util.List<java.util.Map<String, Object>> nextCollRows = db.runQuery("SELECT COALESCE(MAX(id), 0) + 1 AS nextId FROM collections");
+            int nextCollId = 1;
+            if (nextCollRows != null && !nextCollRows.isEmpty()) {
+                Object val = nextCollRows.get(0).get("nextId");
+                nextCollId = ((Number) val).intValue();
+            }
+
+            String collName = enteredCollectionName.trim();
+            String collType = (enteredCollectionType == null) ? "" : enteredCollectionType.trim();
+
+            inv.createCollection(nextCollId, collName, collType, maxSize);
+
+            showMessage("Collection created successfully.");
+            clearAddCollectionFields();
+        } catch (java.sql.SQLException sqle) {
+            System.err.println("SQLException in add collection: " + sqle.getMessage());
+            showMessage("Database error: " + sqle.getMessage());
+        }
     }
 
     @FXML

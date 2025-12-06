@@ -17,7 +17,7 @@ import java.util.Map;
 public class DeleteUserController {
     Stage stage;
     @FXML private Button deleteuserreturn_button;
-    @FXML private Button deleteusersubmit_button; // saved for later even if not used currently
+    @FXML private Button deleteusersubmit_button;
     @FXML private MenuItem deleteuserquit_menu;
     @FXML private MenuItem deleteuseraboutlibrestock_menu;
 

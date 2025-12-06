@@ -15,8 +15,8 @@ import java.io.IOException;
 public class AdminDeleteItemController {
     Stage stage;
     @FXML private Button admindeleteitemreturn_button;
-    @FXML private Button admindeleteitemdelete_button; // saved for later even if not used currently
-    @FXML private Button admindeleteitemsearch_button; // saved for later even if not used currently
+    @FXML private Button admindeleteitemdelete_button;
+    @FXML private Button admindeleteitemsearch_button;
     @FXML private MenuItem admindeleteitemquit_menu;
     @FXML private MenuItem admindeleteitemaboutlibrestock_menu;
     @FXML private TextField admindeleteitemitemID_textfield;
@@ -56,22 +56,103 @@ public class AdminDeleteItemController {
         3.5) if match not found, state item does not exist in DB
          */
 
+        try {
+            boolean found = adminDelCheckForSearch();
+            if (!found) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("LibreStock");
+                a.setHeaderText(null);
+                a.setContentText("No matching item found.");
+                a.showAndWait();
+            }
+        } catch (java.sql.SQLException sqle) {
+            System.err.println("SQLException in AdminDeleteItemController.search: " + sqle.getMessage());
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("LibreStock");
+            a.setHeaderText(null);
+            a.setContentText("Database error: " + sqle.getMessage());
+            a.showAndWait();
+        } catch (IllegalArgumentException iae) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("LibreStock");
+            a.setHeaderText(null);
+            a.setContentText(iae.getMessage());
+            a.showAndWait();
+        }
+    }
+
+    /*
+     Lookup an item by itemId or name and populate the delete form.
+     Returns true if an item is found. Throws IllegalArgumentException when input invalid.
+     */
+
+    private boolean adminDelCheckForSearch() throws java.sql.SQLException {
         String enteredDelItemID = admindeleteitemitemID_textfield.getText();
+        String enteredDelItemName = admindeleteitemitemname_textfield.getText();
 
-        // TODO: Search for match in itemDB using itemID
+        if (enteredDelItemID != null) enteredDelItemID = enteredDelItemID.trim();
+        if (enteredDelItemName != null) enteredDelItemName = enteredDelItemName.trim();
 
-        /*
-        Populate fields once a match is found (note: methods listed here are not yet made)
-        String delitemName = getItemNameFromDB();
-        String delitemCollection = getItemCollectionFromDB();
-        String delitemQuantity = getItemQuantityFromDB();
-        String delitemSKU = getItemSKUFromDB();
+        DbAccess db = new DbAccess();
+        java.util.List<java.util.Map<String, Object>> rows = null;
 
-        admindeleteitemitemname_textfield.setText(delitemName);
-        admindeleteitemcollection_textfield.setText(delitemCollection);
-        admindeleteitemquantity_textfield.setText(delitemQuantity);
-        admindeleteitemsku_textfield.setText(delitemSKU);
-        */
+        if (enteredDelItemID != null && !enteredDelItemID.isEmpty()) {
+            try {
+                int itemId = Integer.parseInt(enteredDelItemID);
+                rows = db.runQuery("SELECT * FROM items WHERE itemId = ?", itemId);
+            } catch (NumberFormatException nfe) {
+                throw new IllegalArgumentException("itemID must be a whole number.");
+            }
+        }
+
+        if ((rows == null || rows.isEmpty()) && enteredDelItemName != null && !enteredDelItemName.isEmpty()) {
+            rows = db.runQuery("SELECT * FROM items WHERE name = ?", enteredDelItemName);
+        }
+
+        if (rows != null && !rows.isEmpty()) {
+            java.util.Map<String, Object> item = rows.get(0);
+
+            Object idVal = item.get("itemId");
+            Object collValObj = item.get("collection");
+            Object qtyVal = item.get("quantity");
+            Object skuVal = item.get("sku");
+
+            // Resolve collection id -> collection name for better UI/UX context 
+            // (this is what shows the collection name in the field instead of the collection ID)
+            String collName = "";
+            if (collValObj != null) {
+                try {
+                    int collId = ((Number) collValObj).intValue();
+                    java.util.List<java.util.Map<String, Object>> collRows = db.runQuery("SELECT name FROM collections WHERE id = ?", collId);
+                    if (collRows != null && !collRows.isEmpty()) {
+                        Object nameObj = collRows.get(0).get("name");
+                        collName = nameObj == null ? "" : nameObj.toString();
+                    } else {
+                        // fallback to showing the id if no collection row found
+                        collName = Integer.toString(collId);
+                    }
+                } catch (ClassCastException cce) {
+                    collName = collValObj.toString();
+                }
+            }
+
+            admindeleteitemitemID_textfield.setText(idVal == null ? "" : idVal.toString());
+            admindeleteitemitemname_textfield.setText(item.get("name") == null ? "" : item.get("name").toString());
+            admindeleteitemcollection_textfield.setText(collName);
+            admindeleteitemquantity_textfield.setText(qtyVal == null ? "" : qtyVal.toString());
+            admindeleteitemsku_textfield.setText(skuVal == null ? "" : skuVal.toString());
+
+            // keep fields non-editable for delete confirmation
+            admindeleteitemitemID_textfield.setEditable(false);
+            admindeleteitemitemname_textfield.setEditable(false);
+            admindeleteitemcollection_textfield.setEditable(false);
+            admindeleteitemquantity_textfield.setEditable(false);
+            admindeleteitemsku_textfield.setEditable(false);
+
+            return true;
+        }
+
+        throw new IllegalArgumentException("No matching item in the database.");
     }
         @FXML
     private void admindelitemsubmitButtonClick() throws IOException{
@@ -83,12 +164,60 @@ public class AdminDeleteItemController {
         3.) Show user blank slate, incase they need to delete other items */
         
         String enteredDelItemID = admindeleteitemitemID_textfield.getText();
-    
-        // TODO: Method to match itemID above with all items in current itemDB
 
-        // TODO: Method to remove items from item DB
+        if (enteredDelItemID == null || enteredDelItemID.trim().isEmpty()) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("LibreStock");
+            a.setHeaderText(null);
+            a.setContentText("To delete an item, please provide its itemID.");
+            a.showAndWait();
+            return;
+        }
 
-        // clearFields();
+        int itemId;
+        try {
+            itemId = Integer.parseInt(enteredDelItemID.trim());
+        } catch (NumberFormatException nfe) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("LibreStock");
+            a.setHeaderText(null);
+            a.setContentText("itemID must be a whole number.");
+            a.showAndWait();
+            return;
+        }
+
+        try {
+            DbAccess db = new DbAccess();
+            java.util.List<java.util.Map<String, Object>> rows = db.runQuery("SELECT * FROM items WHERE itemId = ?", itemId);
+            if (rows == null || rows.isEmpty()) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("LibreStock");
+                a.setHeaderText(null);
+                a.setContentText("No item found with that itemID.");
+                a.showAndWait();
+                return;
+            }
+
+            db.runQuery("DELETE FROM items WHERE itemId = ?", itemId);
+
+            Alert info = new Alert(Alert.AlertType.INFORMATION);
+            info.setTitle("LibreStock");
+            info.setHeaderText(null);
+            info.setContentText("Item deleted successfully.");
+            info.showAndWait();
+
+            // clear the form and reset editability
+            clearFields();
+            admindeleteitemitemID_textfield.setEditable(true);
+
+        } catch (java.sql.SQLException e) {
+            System.err.println("SQLException in AdminDeleteItemController.delete: " + e.getMessage());
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("LibreStock");
+            a.setHeaderText(null);
+            a.setContentText("Database error: " + e.getMessage());
+            a.showAndWait();
+        }
     }
 
         @FXML
