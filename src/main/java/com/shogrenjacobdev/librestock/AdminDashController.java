@@ -1,9 +1,6 @@
 package com.shogrenjacobdev.librestock;
 
-import javafx.scene.control.Label;
-
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -267,6 +264,7 @@ public void initialize() {
         // average items per collection
         if (admindashavgitem_value != null) {
             HashMap<String, Integer> collectionCounts = new HashMap<>();
+
             List<Map<String, Object>> itemsResponse =
                     db.runQuery("SELECT quantity, collection FROM items");
 
